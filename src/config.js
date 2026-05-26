@@ -3,7 +3,7 @@ const path = require('node:path');
 const fs = require('node:fs');
 
 const FAN_DIR = '.fan';
-const DEFAULT_REGISTRY_URL = 'https://github.com/AI4S-YB/fan-marketplace';
+const DEFAULT_REGISTRY_URL = 'https://cdn.jsdelivr.net/gh/AI4S-YB/fan-marketplace@main';
 
 function fanDir(home) {
   home = home || (process.env.FAN_HOME || path.join(require('node:os').homedir()));

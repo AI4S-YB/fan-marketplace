@@ -15,8 +15,7 @@
       "homepage": "https://github.com/AI4S-YB/fan-skill",
       "distribution": {
         "type": "git",
-        "url": "https://github.com/AI4S-YB/fan-skill.git",
-        "tag": "v2.2.0"
+        "url": "https://github.com/AI4S-YB/fan-skill.git"
       },
       "provides": ["consult-analysis", "design-experiment", "knowledge-matching", "visualize-data"],
       "requires": [],
