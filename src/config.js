@@ -28,7 +28,12 @@ function loadInstalled(home) {
   if (!fs.existsSync(file)) {
     return { skills: {} };
   }
-  return JSON.parse(fs.readFileSync(file, 'utf-8'));
+  try {
+    return JSON.parse(fs.readFileSync(file, 'utf-8'));
+  } catch (e) {
+    console.warn(`Warning: corrupted ${file}, resetting to default`);
+    return { skills: {} };
+  }
 }
 
 function saveInstalled(home, data) {
@@ -59,7 +64,12 @@ function loadRegistries(home) {
   if (!fs.existsSync(file)) {
     return [{ name: 'fan-marketplace', url: DEFAULT_REGISTRY_URL }];
   }
-  return JSON.parse(fs.readFileSync(file, 'utf-8'));
+  try {
+    return JSON.parse(fs.readFileSync(file, 'utf-8'));
+  } catch (e) {
+    console.warn(`Warning: corrupted ${file}, resetting to default`);
+    return [{ name: 'fan-marketplace', url: DEFAULT_REGISTRY_URL }];
+  }
 }
 
 function saveRegistries(home, registries) {

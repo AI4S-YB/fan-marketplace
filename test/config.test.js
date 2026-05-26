@@ -74,3 +74,29 @@ describe('loadRegistries / saveRegistries', () => {
     assert.strictEqual(loaded[1].name, 'custom');
   });
 });
+
+describe('addInstalledSkill / removeInstalledSkill / isInstalled', () => {
+  it('adds, checks, and removes a skill', async () => {
+    const { ensureFanDir, addInstalledSkill, removeInstalledSkill, isInstalled, loadInstalled } = require('../src/config.js');
+    ensureFanDir(testHome);
+
+    const info = { version: '2.0.0', provides: ['search-x'], installed_at: new Date().toISOString(), source: 'test' };
+
+    // Initially not installed
+    assert.strictEqual(isInstalled(testHome, 'test-skill'), false);
+
+    // Add
+    addInstalledSkill(testHome, 'test-skill', info);
+    assert.strictEqual(isInstalled(testHome, 'test-skill'), true);
+
+    const state = loadInstalled(testHome);
+    assert.strictEqual(state.skills['test-skill'].version, '2.0.0');
+
+    // Remove
+    removeInstalledSkill(testHome, 'test-skill');
+    assert.strictEqual(isInstalled(testHome, 'test-skill'), false);
+
+    // Removing non-existent should not throw
+    removeInstalledSkill(testHome, 'nonexistent');
+  });
+});
