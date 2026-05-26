@@ -1,0 +1,27 @@
+{
+  "registry": {
+    "name": "fan-marketplace",
+    "version": "1.0.0",
+    "updated": "2026-05-26T00:00:00Z"
+  },
+  "skills": [
+    {
+      "id": "fan-skill",
+      "display_name": "Fan-Skill: Plant Bioinformatics Engine",
+      "description": "AI-powered plant bioinformatics and breeding analysis engine. From biological question to publication-ready results — consultation, analysis, interpretation, and visualization. Knowledge-base driven with B+C dual-mode decision architecture.",
+      "author": "AI4S-YB",
+      "version": "2.3.0",
+      "license": "MIT",
+      "homepage": "https://github.com/AI4S-YB/fan-skill",
+      "distribution": {
+        "type": "git",
+        "url": "https://github.com/AI4S-YB/fan-skill.git",
+        "tag": "v2.2.0"
+      },
+      "provides": ["consult-analysis", "design-experiment", "knowledge-matching", "visualize-data"],
+      "requires": [],
+      "keywords": ["bioinformatics", "plant", "breeding", "genomics", "transcriptomics", "phylogeny", "gwas", "genomic-selection"],
+      "category": "core"
+    }
+  ]
+}
