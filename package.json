@@ -1,0 +1,26 @@
+{
+  "name": "fan-cli",
+  "version": "0.1.0",
+  "description": "CLI for the fan skill marketplace — search, install, and manage AI coding agent skills",
+  "bin": {
+    "fan": "./bin/fan.js"
+  },
+  "main": "./src/cli.js",
+  "files": [
+    "bin/",
+    "src/",
+    "schema/"
+  ],
+  "scripts": {
+    "test": "node --test test/*.test.js",
+    "start": "node bin/fan.js"
+  },
+  "keywords": ["fan", "skill", "marketplace", "ai", "claude-code"],
+  "license": "MIT",
+  "dependencies": {
+    "commander": "^12.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
