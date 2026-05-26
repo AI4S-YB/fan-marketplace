@@ -26,7 +26,8 @@
           "id": { "type": "string" },
           "description": { "type": "string" },
           "input": { "type": "object" },
-          "output": { "type": "object" }
+          "output": { "type": "object" },
+          "run": { "type": "string" }
         }
       }
     },

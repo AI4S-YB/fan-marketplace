@@ -275,6 +275,59 @@ function run(argv) {
       process.exit(1);
     });
 
+  // fan which <capability-id>
+  program.command('which')
+    .description('Find which installed skill provides a capability')
+    .argument('<capability-id>', 'Capability identifier')
+    .action((capabilityId) => {
+      const { findCapabilityProvider } = require('./capability.js');
+      const result = findCapabilityProvider(HOME, capabilityId);
+      if (!result) {
+        console.log(`No installed skill provides '${capabilityId}'.`);
+        console.log('Run `fan capabilities` to see available capabilities.');
+        return;
+      }
+      console.log(`${capabilityId} is provided by ${result.skillId}@${result.version}`);
+      console.log(`  directory: ${result.skillDir}`);
+    });
+
+  // fan capabilities
+  program.command('capabilities')
+    .description('List all capabilities provided by installed skills')
+    .action(() => {
+      const { listAllCapabilities } = require('./capability.js');
+      const capabilities = listAllCapabilities(HOME);
+
+      if (capabilities.length === 0) {
+        console.log('No capabilities available. No skills are installed.');
+        console.log("Run 'fan search' to discover skills, 'fan install <id>' to install.");
+        return;
+      }
+
+      console.log(`\nAvailable capabilities (${capabilities.length}):\n`);
+      for (const c of capabilities) {
+        console.log(`  ${c.capabilityId.padEnd(24)} ${c.skillId}@${c.version}`);
+      }
+      console.log('');
+    });
+
+  // fan invoke <skill-id> <capability-id> [args...]
+  program.command('invoke')
+    .description('Invoke a capability from an installed skill')
+    .argument('<skill-id>', 'Skill identifier')
+    .argument('<capability-id>', 'Capability identifier')
+    .argument('[args...]', 'Additional arguments passed to the capability')
+    .action((skillId, capabilityId, args) => {
+      ensureFanDir(HOME);
+      const { invokeCapability } = require('./capability.js');
+      try {
+        invokeCapability(HOME, skillId, capabilityId, args || []);
+      } catch (e) {
+        console.error(`Error: ${e.message}`);
+        process.exit(1);
+      }
+    });
+
   program.parse(argv);
 }
 

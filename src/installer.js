@@ -39,6 +39,7 @@ function installSkill(home, skillInfo) {
       addInstalledSkill(home, skillInfo.id, {
         version: skillInfo.version || 'unknown',
         provides: skillInfo.provides || [],
+        requires: skillInfo.requires || [],
         installed_at: new Date().toISOString(),
         source: dist.url,
         has_skill_yaml: hasSkillYaml
