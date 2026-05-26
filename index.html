@@ -3,164 +3,722 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Fan Marketplace</title>
+<title>FAN Marketplace — Future Agriculture Nexus</title>
 <style>
+  /* ===== Reset ===== */
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  /* ===== Variables ===== */
+  :root {
+    --bg: #0d0d0d;
+    --surface: #161b22;
+    --border: #30363d;
+    --text: #c9d1d9;
+    --muted: #8b949e;
+    --accent: #58a6ff;
+    --green: #7ee787;
+    --orange: #f0883e;
+  }
+
+  /* ===== Base ===== */
   body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background: #f5f5f5;
-    color: #1a1a1a;
+    font-family: 'SF Mono', 'Cascadia Code', 'Consolas', 'Monaco', monospace;
+    font-size: 14px;
+    background: var(--bg);
+    color: var(--text);
     line-height: 1.6;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
   }
-  .container { max-width: 900px; margin: 0 auto; padding: 40px 20px; }
-  header { text-align: center; margin-bottom: 40px; }
-  header h1 { font-size: 2rem; margin-bottom: 8px; }
-  header p { color: #666; font-size: 1.1rem; }
-  .search-bar {
-    width: 100%;
-    padding: 12px 16px;
-    font-size: 1rem;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    margin-bottom: 24px;
-    outline: none;
-    transition: border-color 0.2s;
+
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* ===== Header ===== */
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+    height: 52px;
   }
-  .search-bar:focus { border-color: #4f8f00; }
-  .skill-card {
-    background: #fff;
-    border: 1px solid #e5e5e5;
-    border-radius: 10px;
-    padding: 20px 24px;
-    margin-bottom: 16px;
-    transition: box-shadow 0.2s;
+
+  .header-brand { display: flex; align-items: baseline; gap: 10px; }
+
+  .header-logo {
+    font-size: 18px;
+    font-weight: bold;
+    color: var(--accent);
+    letter-spacing: 1px;
   }
-  .skill-card:hover { box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
-  .skill-header { display: flex; align-items: baseline; gap: 10px; margin-bottom: 6px; flex-wrap: wrap; }
-  .skill-name { font-size: 1.2rem; font-weight: 600; color: #4f8f00; }
-  .skill-version { font-size: 0.85rem; color: #999; }
-  .skill-category {
-    font-size: 0.75rem;
-    background: #e8f5e0;
-    color: #4f8f00;
-    padding: 2px 8px;
-    border-radius: 12px;
-    margin-left: auto;
+
+  .header-tagline {
+    font-size: 11px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 2px;
   }
-  .skill-desc { color: #555; margin-bottom: 12px; }
-  .skill-meta { display: flex; gap: 20px; font-size: 0.85rem; color: #888; margin-bottom: 12px; flex-wrap: wrap; }
-  .skill-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
-  .skill-tags span {
-    font-size: 0.75rem;
-    background: #f0f0f0;
-    padding: 2px 8px;
-    border-radius: 4px;
-    color: #666;
-  }
-  .install-cmd {
-    background: #1a1a1a;
-    color: #4f8f00;
-    padding: 8px 14px;
-    border-radius: 6px;
-    font-family: 'SF Mono', 'Consolas', monospace;
-    font-size: 0.85rem;
-    display: inline-block;
+
+  .header-nav { display: flex; gap: 0; }
+
+  .nav-tab {
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: var(--muted);
     cursor: pointer;
-    user-select: all;
-    transition: background 0.2s;
+    font-family: inherit;
+    font-size: 13px;
+    padding: 14px 16px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
   }
-  .install-cmd:hover { background: #2a2a2a; }
-  .provides-label, .requires-label { font-weight: 600; font-size: 0.85rem; color: #555; }
-  .no-results { text-align: center; color: #999; padding: 40px 0; }
-  .stats { text-align: center; color: #888; font-size: 0.85rem; margin-bottom: 16px; }
-  footer { text-align: center; color: #aaa; font-size: 0.8rem; margin-top: 40px; padding-top: 20px; border-top: 1px solid #e5e5e5; }
+
+  .nav-tab:hover { color: var(--text); }
+
+  .nav-tab.active {
+    color: #fff;
+    border-bottom-color: var(--accent);
+  }
+
+  /* Hamburger */
+  .hamburger {
+    display: none;
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: inherit;
+    font-size: 18px;
+    cursor: pointer;
+    padding: 6px 12px;
+    line-height: 1;
+  }
+
+  /* ===== Main ===== */
+  .main {
+    flex: 1;
+    max-width: 960px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 32px 24px 48px;
+  }
+
+  /* ===== Tab Content ===== */
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* ===== Hero ===== */
+  .hero { margin-bottom: 32px; }
+
+  .hero h1 {
+    font-size: 24px;
+    font-weight: bold;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+
+  .hero p {
+    color: var(--muted);
+    font-size: 14px;
+    margin-bottom: 16px;
+    max-width: 640px;
+  }
+
+  .hero-install {
+    display: inline-block;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--green);
+    padding: 10px 18px;
+    font-family: inherit;
+    font-size: 13px;
+    user-select: all;
+    white-space: nowrap;
+  }
+
+  /* ===== Search ===== */
+  .search-wrap { margin-bottom: 16px; }
+
+  .search-input {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: inherit;
+    font-size: 14px;
+    padding: 10px 14px;
+    outline: none;
+    border-radius: 0;
+  }
+
+  .search-input::placeholder { color: var(--muted); }
+  .search-input:focus { border-color: var(--accent); }
+
+  /* ===== Stats ===== */
+  .stats {
+    color: var(--muted);
+    font-size: 12px;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  /* ===== Skill Cards ===== */
+  .skills-list { display: flex; flex-direction: column; gap: 12px; }
+
+  .skill-card {
+    border: 1px solid var(--border);
+    padding: 18px 20px;
+    background: var(--bg);
+  }
+
+  .skill-name {
+    font-size: 15px;
+    font-weight: bold;
+    color: var(--green);
+    margin-bottom: 6px;
+  }
+
+  .skill-desc {
+    color: var(--muted);
+    font-size: 13px;
+    margin-bottom: 10px;
+    line-height: 1.5;
+  }
+
+  .skill-tags {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+  }
+
+  .skill-tag {
+    font-size: 11px;
+    color: var(--orange);
+    border: 1px solid var(--border);
+    padding: 2px 8px;
+    border-radius: 0;
+  }
+
+  .skill-install {
+    display: inline-block;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--green);
+    padding: 6px 14px;
+    font-family: inherit;
+    font-size: 12px;
+    user-select: all;
+    border-radius: 0;
+  }
+
+  /* ===== Section ===== */
+  .section {
+    margin-bottom: 32px;
+  }
+
+  .section h2 {
+    font-size: 18px;
+    font-weight: bold;
+    color: var(--text);
+    margin-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 8px;
+  }
+
+  .section h3 {
+    font-size: 15px;
+    font-weight: bold;
+    color: var(--text);
+    margin: 20px 0 8px;
+  }
+
+  .section p {
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.7;
+    margin-bottom: 12px;
+  }
+
+  .section pre {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 14px 16px;
+    overflow-x: auto;
+    font-family: inherit;
+    font-size: 13px;
+    line-height: 1.6;
+    margin-bottom: 12px;
+    white-space: pre-wrap;
+    word-break: break-all;
+  }
+
+  .section code {
+    background: var(--surface);
+    color: var(--green);
+    padding: 2px 6px;
+    font-family: inherit;
+    font-size: 12px;
+  }
+
+  .section pre code {
+    background: none;
+    padding: 0;
+    color: inherit;
+    font-size: inherit;
+  }
+
+  /* syntax highlighting */
+  .kw { color: var(--accent); }
+  .str { color: var(--green); }
+  .cmt { color: var(--muted); font-style: italic; }
+
+  /* ===== Footer ===== */
+  .footer {
+    border-top: 1px solid var(--border);
+    text-align: center;
+    padding: 20px 24px;
+    color: var(--muted);
+    font-size: 12px;
+  }
+
+  .footer a { color: var(--accent); }
+
+  /* ===== Responsive ===== */
+  @media (max-width: 640px) {
+    .header-nav { display: none; }
+    .header-nav.open {
+      display: flex;
+      flex-direction: column;
+      position: absolute;
+      top: 52px;
+      left: 0;
+      right: 0;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .header-nav.open .nav-tab {
+      border-bottom: 1px solid var(--border);
+      padding: 12px 24px;
+    }
+
+    .hamburger { display: block; }
+
+    .header-tagline { display: none; }
+
+    .main { padding: 24px 16px 32px; }
+
+    .hero h1 { font-size: 20px; }
+  }
 </style>
 </head>
 <body>
-<div class="container">
-  <header>
-    <h1>Fan Marketplace</h1>
-    <p>Discover and install AI coding agent skills</p>
-  </header>
-  <input class="search-bar" type="text" id="search" placeholder="Search skills... (e.g. bioinformatics, ncbi, plant)">
-  <div class="stats" id="stats"></div>
-  <div id="skills"></div>
-  <footer>
-    Powered by <a href="https://github.com/AI4S-YB/fan-marketplace">fan-marketplace</a> &middot;
-    Install CLI: <code>npm install -g fan-cli</code>
-  </footer>
-</div>
 
-<script>
-const REGISTRY_URL = 'https://cdn.jsdelivr.net/gh/AI4S-YB/fan-marketplace@main/index.json';
-
-async function load() {
-  try {
-    const resp = await fetch(REGISTRY_URL);
-    const data = await resp.json();
-    window.skills = data.skills || [];
-  } catch (e) {
-    window.skills = [];
-    document.getElementById('skills').innerHTML =
-      '<div class="no-results">Failed to load registry. Please try again later.</div>';
-  }
-  render(window.skills);
-}
-
-function render(skills) {
-  document.getElementById('stats').textContent =
-    skills.length + ' skill' + (skills.length !== 1 ? 's' : '') + ' available';
-  const container = document.getElementById('skills');
-  if (skills.length === 0) {
-    container.innerHTML = '<div class="no-results">No skills found.</div>';
-    return;
-  }
-  container.innerHTML = skills.map(s => `
-    <div class="skill-card">
-      <div class="skill-header">
-        <span class="skill-name">${esc(s.display_name || s.id)}</span>
-        <span class="skill-version">v${esc(s.version || '?')}</span>
-        ${s.category ? `<span class="skill-category">${esc(s.category)}</span>` : ''}
-      </div>
-      <div class="skill-desc">${esc(s.description || '')}</div>
-      <div class="skill-meta">
-        ${s.author ? `<span>by ${esc(s.author)}</span>` : ''}
-        ${s.license ? `<span>${esc(s.license)}</span>` : ''}
-      </div>
-      ${s.keywords && s.keywords.length ? `
-        <div class="skill-tags">${s.keywords.map(k => `<span>${esc(k)}</span>`).join('')}</div>
-      ` : ''}
-      <div style="margin-bottom:8px">
-        <span class="provides-label">Provides: </span>
-        <span style="font-size:0.85rem;color:#555">${(s.provides || []).join(', ') || 'none'}</span>
-      </div>
-      ${s.requires && s.requires.length ? `
-        <div style="margin-bottom:8px">
-          <span class="requires-label">Requires: </span>
-          <span style="font-size:0.85rem;color:#555">${s.requires.join(', ')}</span>
-        </div>
-      ` : ''}
-      <div class="install-cmd" title="Click to copy">fan install ${esc(s.id)}</div>
+  <!-- ===== Header ===== -->
+  <header class="header">
+    <div class="header-brand">
+      <span class="header-logo">FAN</span>
+      <span class="header-tagline">Future Agriculture Nexus</span>
     </div>
-  `).join('');
-}
 
-function esc(s) {
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-}
+    <button class="hamburger" id="hamburger" aria-label="Toggle navigation">&#9776;</button>
 
-document.getElementById('search').addEventListener('input', function(e) {
-  const q = e.target.value.toLowerCase().trim();
-  const filtered = q ? (window.skills || []).filter(s =>
-    s.id.toLowerCase().includes(q) ||
-    (s.display_name || '').toLowerCase().includes(q) ||
-    (s.description || '').toLowerCase().includes(q) ||
-    (s.keywords || []).some(k => k.toLowerCase().includes(q))
-  ) : (window.skills || []);
-  render(filtered);
-});
+    <nav class="header-nav" id="nav">
+      <button class="nav-tab active" data-tab="tab-marketplace">Marketplace</button>
+      <button class="nav-tab" data-tab="tab-guide">Guide</button>
+      <button class="nav-tab" data-tab="tab-contribute">Contribute</button>
+      <button class="nav-tab" data-tab="tab-about">About</button>
+    </nav>
+  </header>
 
-load();
-</script>
+  <!-- ===== Main Content ===== -->
+  <main class="main">
+
+    <!-- Marketplace Tab -->
+    <section class="tab-content active" id="tab-marketplace">
+      <div class="hero">
+        <h1>AI Skills for Agricultural Bioinformatics</h1>
+        <p>Discover and install modular AI coding agent skills for plant genomics, breeding analytics, and bioinformatics research. Powered by the FAN ecosystem.</p>
+        <div class="hero-install">$ npm install -g fan-cli</div>
+      </div>
+
+      <div class="search-wrap">
+        <input class="search-input" type="text" id="search" placeholder="&gt; search skills...">
+      </div>
+
+      <div class="stats" id="stats">8 skills available</div>
+
+      <div class="skills-list" id="skills">
+        <!-- Sample skills hardcoded for display -->
+        <div class="skill-card">
+          <div class="skill-name">fan-skill</div>
+          <div class="skill-desc">AI-powered plant bioinformatics and breeding analysis engine. From biological question to publication-ready results — consultation, analysis, visualization.</div>
+          <div class="skill-tags">
+            <span class="skill-tag">plant-bioinformatics</span>
+            <span class="skill-tag">breeding</span>
+            <span class="skill-tag">genomics</span>
+          </div>
+          <div class="skill-install">fan install fan-skill</div>
+        </div>
+
+        <div class="skill-card">
+          <div class="skill-name">academic-paper</div>
+          <div class="skill-desc">12-agent academic paper writing pipeline with 10 modes for full paper generation, planning, revision, abstracts, literature reviews, and format conversion.</div>
+          <div class="skill-tags">
+            <span class="skill-tag">academic-writing</span>
+            <span class="skill-tag">latex</span>
+            <span class="skill-tag">multi-agent</span>
+          </div>
+          <div class="skill-install">fan install academic-paper</div>
+        </div>
+
+        <div class="skill-card">
+          <div class="skill-name">deep-research</div>
+          <div class="skill-desc">Universal deep research agent team with 13-agent pipeline for rigorous academic research on any topic, with 7 operational modes.</div>
+          <div class="skill-tags">
+            <span class="skill-tag">research</span>
+            <span class="skill-tag">multi-agent</span>
+            <span class="skill-tag">literature</span>
+          </div>
+          <div class="skill-install">fan install deep-research</div>
+        </div>
+
+        <div class="skill-card">
+          <div class="skill-name">academic-pipeline</div>
+          <div class="skill-desc">Orchestrator for the full academic research pipeline: research, write, integrity check, review, revise, re-review, and finalize.</div>
+          <div class="skill-tags">
+            <span class="skill-tag">orchestration</span>
+            <span class="skill-tag">academic</span>
+            <span class="skill-tag">pipeline</span>
+          </div>
+          <div class="skill-install">fan install academic-pipeline</div>
+        </div>
+
+        <div class="skill-card">
+          <div class="skill-name">academic-paper-reviewer</div>
+          <div class="skill-desc">Multi-perspective academic paper review with 5 independent reviewers including EIC, peer reviewers, and Devil's advocate.</div>
+          <div class="skill-tags">
+            <span class="skill-tag">peer-review</span>
+            <span class="skill-tag">academic</span>
+            <span class="skill-tag">evaluation</span>
+          </div>
+          <div class="skill-install">fan install academic-paper-reviewer</div>
+        </div>
+
+        <div class="skill-card">
+          <div class="skill-name">bio-consult</div>
+          <div class="skill-desc">面向实验生物学家的分析咨询 Skill，提供 B+C 架构向上游扩展的生物信息学咨询服务。</div>
+          <div class="skill-tags">
+            <span class="skill-tag">consulting</span>
+            <span class="skill-tag">bioinformatics</span>
+            <span class="skill-tag">experimental-biology</span>
+          </div>
+          <div class="skill-install">fan install bio-consult</div>
+        </div>
+
+        <div class="skill-card">
+          <div class="skill-name">claude-api</div>
+          <div class="skill-desc">Build, debug, and optimize Claude API / Anthropic SDK apps with prompt caching and model migration support.</div>
+          <div class="skill-tags">
+            <span class="skill-tag">api</span>
+            <span class="skill-tag">sdk</span>
+            <span class="skill-tag">claude</span>
+          </div>
+          <div class="skill-install">fan install claude-api</div>
+        </div>
+
+        <div class="skill-card">
+          <div class="skill-name">ars-disclosure</div>
+          <div class="skill-desc">ARS academic-paper disclosure mode — generate venue-specific AI-usage statements for academic manuscripts.</div>
+          <div class="skill-tags">
+            <span class="skill-tag">disclosure</span>
+            <span class="skill-tag">academic</span>
+            <span class="skill-tag">ethics</span>
+          </div>
+          <div class="skill-install">fan install ars-disclosure</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Guide Tab -->
+    <section class="tab-content" id="tab-guide">
+      <div class="section">
+        <h2>1. Install Claude Code</h2>
+        <p>Claude Code is the AI coding agent that runs skills. Requires Node.js 18+.</p>
+        <pre>$ <span class="kw">npm install -g</span> @anthropic-ai/claude-code
+$ claude --version</pre>
+        <p>See the <a href="https://docs.anthropic.com/en/docs/claude-code/overview" target="_blank">Claude Code documentation</a> for detailed setup instructions.</p>
+      </div>
+
+      <div class="section">
+        <h2>2. Configure Settings</h2>
+        <p>Claude Code reads <code>~/.claude/settings.json</code> for plugin and skill configuration. Create this file if it doesn't exist:</p>
+        <pre>{
+  <span class="str">"enabledPlugins"</span>: {}
+}</pre>
+        <p>Skills installed via <code>fan install</code> are automatically synced to <code>~/.claude/skills/</code> as symlinks. Claude Code discovers them automatically — no extra configuration needed.</p>
+      </div>
+
+      <div class="section">
+        <h2>3. Install fan-cli</h2>
+        <p>The <code>fan</code> command searches, installs, and manages skills from the FAN Marketplace.</p>
+        <pre>$ <span class="kw">npm install -g</span> fan-cli
+$ fan --help</pre>
+        <p>fan-cli is the bridge between the marketplace registry and your local AI coding environment.</p>
+      </div>
+
+      <div class="section">
+        <h2>4. Discover &amp; Install Skills</h2>
+        <pre>$ fan search <span class="str">"plant"</span>               <span class="cmt">// Search for skills</span>
+$ fan info fan-skill              <span class="cmt">// View skill details</span>
+$ fan install fan-skill           <span class="cmt">// Install a skill</span>
+$ fan list                        <span class="cmt">// List installed skills</span>
+$ fan capabilities                <span class="cmt">// Show all available capabilities</span>
+$ fan which consult-analysis      <span class="cmt">// Find what skill provides a capability</span>
+$ fan invoke fan-skill consult-analysis  <span class="cmt">// Invoke a capability</span></pre>
+        <p>After installation, restart Claude Code (or start a new conversation). The skill appears in the available skills list automatically.</p>
+      </div>
+    </section>
+
+    <!-- Contribute Tab -->
+    <section class="tab-content" id="tab-contribute">
+      <div class="section">
+        <h2>Create Your Own Skill</h2>
+        <p>Every skill is a git repository with two essential files: <code>skill.yaml</code> (machine-readable manifest) and <code>SKILL.md</code> (AI agent context).</p>
+
+        <h3>Step 1: Write skill.yaml</h3>
+        <p>The manifest declares your skill's identity, capabilities, and dependencies.</p>
+        <pre>name: <span class="str">my-skill</span>
+version: <span class="str">0.1.0</span>
+display_name: <span class="str">"My Skill"</span>
+description: <span class="str">"What this skill does in one sentence"</span>
+author: <span class="str">your-github-handle</span>
+license: <span class="str">MIT</span>
+homepage: <span class="str">https://github.com/YOU/my-skill</span>
+runtime:
+  type: <span class="str">skill</span>
+  min_fan_version: <span class="str">"0.1.0"</span>
+provides:
+  - id: <span class="str">my-capability</span>
+    description: <span class="str">What this capability does</span>
+    run: <span class="str">echo hello</span>
+requires: []</pre>
+        <p>Key fields: <code>name</code> and <code>version</code> are required. <code>provides</code> lists what your skill can do — each capability can have a <code>run</code> command for CLI invocation. <code>requires</code> lists capabilities your skill depends on.</p>
+
+        <h3>Step 2: Write SKILL.md</h3>
+        <p>SKILL.md is the instruction file loaded into the AI agent's context. Write clear, direct instructions the AI will follow.</p>
+        <pre>---
+name: <span class="str">my-skill</span>
+description: <span class="str">What this skill does for AI agents</span>
+---
+
+<span class="cmt">## How You Work</span>
+You are an AI assistant specialized in [domain]. When the user asks about [topic]:
+
+1. First, [step one]
+2. Then, [step two]
+3. Finally, [step three]
+
+<span class="cmt">## Constraints</span>
+- Always [rule]
+- Never [rule]</pre>
+        <p>The YAML frontmatter (between <code>---</code> markers) is required by Claude Code. The body is free-form Markdown.</p>
+
+        <h3>Step 3: File Structure</h3>
+        <pre>my-skill/
+├── skill.yaml         <span class="cmt">// Marketplace manifest</span>
+├── SKILL.md           <span class="cmt">// AI agent context</span>
+└── <span class="cmt">// Any other files — scripts, reference docs, data</span></pre>
+
+        <h3>Step 4: Register on FAN Marketplace</h3>
+        <p>Fork <a href="https://github.com/AI4S-YB/fan-marketplace" target="_blank">fan-marketplace</a>, add your skill entry to <code>index.json</code>, and submit a pull request:</p>
+        <pre>{
+  <span class="str">"id"</span>: <span class="str">"my-skill"</span>,
+  <span class="str">"display_name"</span>: <span class="str">"My Skill"</span>,
+  <span class="str">"description"</span>: <span class="str">"What this skill does"</span>,
+  <span class="str">"author"</span>: <span class="str">"your-handle"</span>,
+  <span class="str">"version"</span>: <span class="str">"0.1.0"</span>,
+  <span class="str">"license"</span>: <span class="str">"MIT"</span>,
+  <span class="str">"homepage"</span>: <span class="str">"https://github.com/YOU/my-skill"</span>,
+  <span class="str">"distribution"</span>: {
+    <span class="str">"type"</span>: <span class="str">"git"</span>,
+    <span class="str">"url"</span>: <span class="str">"https://github.com/YOU/my-skill.git"</span>
+  },
+  <span class="str">"provides"</span>: [<span class="str">"my-capability"</span>],
+  <span class="str">"requires"</span>: [],
+  <span class="str">"keywords"</span>: [<span class="str">"your-keywords"</span>],
+  <span class="str">"category"</span>: <span class="str">"community"</span>
+}</pre>
+        <p>Once merged, your skill is available to everyone: <code>$ fan install my-skill</code></p>
+      </div>
+    </section>
+
+    <!-- About Tab -->
+    <section class="tab-content" id="tab-about">
+      <div class="section">
+        <h2>FAN = Future Agriculture Nexus</h2>
+        <p>FAN is an open ecosystem of AI skills for agricultural bioinformatics and breeding data analysis. Our mission is to make computational biology accessible to every researcher — through AI-powered tools that bridge the gap between biological questions and computational answers.</p>
+        <p>The flagship <strong>fan-skill</strong> engine covers 29 analysis domains — from GWAS and genomic selection to transcriptomics and phylogenetics. Each domain combines expert knowledge (C-layer decision rules) with AI reasoning (B-layer intelligence) to guide researchers from question to publication-ready results.</p>
+      </div>
+
+      <div class="section">
+        <h2>How It Works</h2>
+        <p>Skills are AI agent plugins. Each skill extends Claude Code with domain-specific knowledge, analysis pipelines, and tool integrations. Install a skill, start a conversation, and the AI gains that domain's expertise.</p>
+        <p>Skills can <strong>call each other</strong> at runtime. fan-skill handles analysis planning — when it needs NCBI data, it discovers and invokes the ncbi-downloader skill. The ecosystem grows with each new skill, each building on the capabilities of others.</p>
+      </div>
+
+      <div class="section">
+        <h2>Links</h2>
+        <p>
+          <a href="https://github.com/AI4S-YB/fan-marketplace" target="_blank">fan-marketplace</a> — Registry, CLI, and this website<br>
+          <a href="https://github.com/AI4S-YB/fan-skill" target="_blank">fan-skill</a> — Plant Bioinformatics Engine (29 analysis domains)<br>
+        </p>
+        <p style="margin-top:16px">Built with the <a href="https://github.com/AI4S-YB/fan-marketplace" target="_blank">fan-cli</a> toolkit. MIT License.</p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===== Footer ===== -->
+  <footer class="footer">
+    <span>FAN Marketplace &mdash; Future Agriculture Nexus</span>
+    <span> &middot; </span>
+    <a href="https://github.com/AI4S-YB/fan-marketplace">GitHub</a>
+  </footer>
+
+  <script>
+    var REGISTRY_URL = 'https://cdn.jsdelivr.net/gh/AI4S-YB/fan-marketplace@main/index.json';
+
+    // Tab switching
+    document.querySelectorAll('.nav-tab').forEach(function(tab) {
+      tab.addEventListener('click', function(e) {
+        e.preventDefault();
+        var target = this.dataset.tab;
+        document.querySelectorAll('.nav-tab').forEach(function(t) { t.classList.remove('active'); });
+        this.classList.add('active');
+        document.querySelectorAll('.tab-content').forEach(function(t) { t.classList.remove('active'); });
+        document.getElementById(target).classList.add('active');
+
+        // Close mobile nav after selection
+        var nav = document.getElementById('nav');
+        if (nav) nav.classList.remove('open');
+      });
+    });
+
+    // Mobile nav toggle
+    var hamburger = document.getElementById('hamburger');
+    if (hamburger) {
+      hamburger.addEventListener('click', function() {
+        var nav = document.getElementById('nav');
+        if (nav) nav.classList.toggle('open');
+      });
+    }
+
+    // Registry loading
+    function load() {
+      return fetch(REGISTRY_URL)
+        .then(function(resp) { return resp.json(); })
+        .then(function(data) {
+          window.skills = data.skills || [];
+          render(window.skills);
+        })
+        .catch(function() {
+          window.skills = [];
+          var skillsEl = document.getElementById('skills');
+          if (skillsEl) {
+            skillsEl.innerHTML = '<div style="color:var(--muted);text-align:center;padding:40px">Failed to load registry. Check your connection and try again.</div>';
+          }
+          render(window.skills);
+        });
+    }
+
+    function render(skills) {
+      var statsEl = document.getElementById('stats');
+      var container = document.getElementById('skills');
+      if (!container) return;
+
+      if (statsEl) {
+        statsEl.textContent = skills.length + ' skill' + (skills.length !== 1 ? 's' : '') + ' available';
+      }
+
+      if (skills.length === 0) {
+        container.innerHTML = '<div style="color:var(--muted);text-align:center;padding:40px">No skills found.</div>';
+        return;
+      }
+
+      container.innerHTML = skills.map(function(s) {
+        var name = esc(s.display_name || s.id);
+        var version = esc(s.version || '?');
+        var desc = esc(s.description || '');
+        var author = s.author ? 'by ' + esc(s.author) + ' &middot; ' : '';
+        var license = s.license ? esc(s.license) : '';
+        var meta = author || license ? '<div style="color:var(--muted);font-size:12px;margin-bottom:6px">' + author + license + '</div>' : '';
+        var tags = '';
+        if (s.keywords && s.keywords.length) {
+          tags = '<div class="skill-tags">' + s.keywords.map(function(k) { return '<span class="skill-tag">' + esc(k) + '</span>'; }).join('') + '</div>';
+        }
+        var provides = s.provides && s.provides.length ? '<div style="color:var(--muted);font-size:12px">provides: ' + esc(s.provides.join(', ')) + '</div>' : '';
+        var requires = '';
+        if (s.requires && s.requires.length) {
+          requires = '<div style="color:var(--muted);font-size:12px">requires: ' + esc(s.requires.join(', ')) + '</div>';
+        }
+        var installId = esc(s.id);
+
+        return '<div class="skill-card">' +
+          '<div class="skill-name">' + name + ' <span style="color:var(--muted);font-size:12px;font-weight:normal">v' + version + '</span></div>' +
+          '<div class="skill-desc">' + desc + '</div>' +
+          meta +
+          tags +
+          provides +
+          requires +
+          '<div class="skill-install">fan install ' + installId + '</div>' +
+          '</div>';
+      }).join('');
+
+      // Click-to-copy on install commands
+      container.querySelectorAll('.skill-install').forEach(function(el) {
+        el.addEventListener('click', function() {
+          var text = this.textContent;
+          navigator.clipboard.writeText(text).then(function() {
+            var orig = el.textContent;
+            el.textContent = 'Copied!';
+            setTimeout(function() { el.textContent = orig; }, 1500);
+          }).catch(function() {});
+        });
+        el.style.cursor = 'pointer';
+        el.title = 'Click to copy';
+      });
+    }
+
+    function esc(s) {
+      return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+
+    // Search filtering
+    var searchInput = document.getElementById('search');
+    if (searchInput) {
+      searchInput.addEventListener('input', function(e) {
+        var q = e.target.value.toLowerCase().trim();
+        var filtered = q ? (window.skills || []).filter(function(s) {
+          return s.id.toLowerCase().indexOf(q) !== -1 ||
+            (s.display_name || '').toLowerCase().indexOf(q) !== -1 ||
+            (s.description || '').toLowerCase().indexOf(q) !== -1 ||
+            (s.keywords || []).some(function(k) { return k.toLowerCase().indexOf(q) !== -1; });
+        }) : (window.skills || []);
+        render(filtered);
+      });
+    }
+
+    load();
+  </script>
+
 </body>
 </html>
