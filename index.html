@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fan Marketplace</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #f5f5f5;
+    color: #1a1a1a;
+    line-height: 1.6;
+  }
+  .container { max-width: 900px; margin: 0 auto; padding: 40px 20px; }
+  header { text-align: center; margin-bottom: 40px; }
+  header h1 { font-size: 2rem; margin-bottom: 8px; }
+  header p { color: #666; font-size: 1.1rem; }
+  .search-bar {
+    width: 100%;
+    padding: 12px 16px;
+    font-size: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 24px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .search-bar:focus { border-color: #4f8f00; }
+  .skill-card {
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 10px;
+    padding: 20px 24px;
+    margin-bottom: 16px;
+    transition: box-shadow 0.2s;
+  }
+  .skill-card:hover { box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+  .skill-header { display: flex; align-items: baseline; gap: 10px; margin-bottom: 6px; flex-wrap: wrap; }
+  .skill-name { font-size: 1.2rem; font-weight: 600; color: #4f8f00; }
+  .skill-version { font-size: 0.85rem; color: #999; }
+  .skill-category {
+    font-size: 0.75rem;
+    background: #e8f5e0;
+    color: #4f8f00;
+    padding: 2px 8px;
+    border-radius: 12px;
+    margin-left: auto;
+  }
+  .skill-desc { color: #555; margin-bottom: 12px; }
+  .skill-meta { display: flex; gap: 20px; font-size: 0.85rem; color: #888; margin-bottom: 12px; flex-wrap: wrap; }
+  .skill-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+  .skill-tags span {
+    font-size: 0.75rem;
+    background: #f0f0f0;
+    padding: 2px 8px;
+    border-radius: 4px;
+    color: #666;
+  }
+  .install-cmd {
+    background: #1a1a1a;
+    color: #4f8f00;
+    padding: 8px 14px;
+    border-radius: 6px;
+    font-family: 'SF Mono', 'Consolas', monospace;
+    font-size: 0.85rem;
+    display: inline-block;
+    cursor: pointer;
+    user-select: all;
+    transition: background 0.2s;
+  }
+  .install-cmd:hover { background: #2a2a2a; }
+  .provides-label, .requires-label { font-weight: 600; font-size: 0.85rem; color: #555; }
+  .no-results { text-align: center; color: #999; padding: 40px 0; }
+  .stats { text-align: center; color: #888; font-size: 0.85rem; margin-bottom: 16px; }
+  footer { text-align: center; color: #aaa; font-size: 0.8rem; margin-top: 40px; padding-top: 20px; border-top: 1px solid #e5e5e5; }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>Fan Marketplace</h1>
+    <p>Discover and install AI coding agent skills</p>
+  </header>
+  <input class="search-bar" type="text" id="search" placeholder="Search skills... (e.g. bioinformatics, ncbi, plant)">
+  <div class="stats" id="stats"></div>
+  <div id="skills"></div>
+  <footer>
+    Powered by <a href="https://github.com/AI4S-YB/fan-marketplace">fan-marketplace</a> &middot;
+    Install CLI: <code>npm install -g fan-cli</code>
+  </footer>
+</div>
+
+<script>
+const REGISTRY_URL = 'https://cdn.jsdelivr.net/gh/AI4S-YB/fan-marketplace@main/index.json';
+
+async function load() {
+  try {
+    const resp = await fetch(REGISTRY_URL);
+    const data = await resp.json();
+    window.skills = data.skills || [];
+  } catch (e) {
+    window.skills = [];
+    document.getElementById('skills').innerHTML =
+      '<div class="no-results">Failed to load registry. Please try again later.</div>';
+  }
+  render(window.skills);
+}
+
+function render(skills) {
+  document.getElementById('stats').textContent =
+    skills.length + ' skill' + (skills.length !== 1 ? 's' : '') + ' available';
+  const container = document.getElementById('skills');
+  if (skills.length === 0) {
+    container.innerHTML = '<div class="no-results">No skills found.</div>';
+    return;
+  }
+  container.innerHTML = skills.map(s => `
+    <div class="skill-card">
+      <div class="skill-header">
+        <span class="skill-name">${esc(s.display_name || s.id)}</span>
+        <span class="skill-version">v${esc(s.version || '?')}</span>
+        ${s.category ? `<span class="skill-category">${esc(s.category)}</span>` : ''}
+      </div>
+      <div class="skill-desc">${esc(s.description || '')}</div>
+      <div class="skill-meta">
+        ${s.author ? `<span>by ${esc(s.author)}</span>` : ''}
+        ${s.license ? `<span>${esc(s.license)}</span>` : ''}
+      </div>
+      ${s.keywords && s.keywords.length ? `
+        <div class="skill-tags">${s.keywords.map(k => `<span>${esc(k)}</span>`).join('')}</div>
+      ` : ''}
+      <div style="margin-bottom:8px">
+        <span class="provides-label">Provides: </span>
+        <span style="font-size:0.85rem;color:#555">${(s.provides || []).join(', ') || 'none'}</span>
+      </div>
+      ${s.requires && s.requires.length ? `
+        <div style="margin-bottom:8px">
+          <span class="requires-label">Requires: </span>
+          <span style="font-size:0.85rem;color:#555">${s.requires.join(', ')}</span>
+        </div>
+      ` : ''}
+      <div class="install-cmd" title="Click to copy">fan install ${esc(s.id)}</div>
+    </div>
+  `).join('');
+}
+
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+document.getElementById('search').addEventListener('input', function(e) {
+  const q = e.target.value.toLowerCase().trim();
+  const filtered = q ? (window.skills || []).filter(s =>
+    s.id.toLowerCase().includes(q) ||
+    (s.display_name || '').toLowerCase().includes(q) ||
+    (s.description || '').toLowerCase().includes(q) ||
+    (s.keywords || []).some(k => k.toLowerCase().includes(q))
+  ) : (window.skills || []);
+  render(filtered);
+});
+
+load();
+</script>
+</body>
+</html>

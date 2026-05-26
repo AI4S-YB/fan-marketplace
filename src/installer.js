@@ -46,6 +46,9 @@ function installSkill(home, skillInfo) {
       });
 
       resolve({ success: true, dir: skillDir });
+
+      // Sync to Claude Code
+      syncToClaudeCode(home, skillInfo.id);
     } catch (e) {
       // Clean up failed clone
       if (fs.existsSync(skillDir)) {
@@ -62,6 +65,9 @@ function removeSkill(home, skillId) {
     fs.rmSync(skillDir, { recursive: true, force: true });
   }
   removeInstalledSkill(home, skillId);
+
+  // Remove from Claude Code
+  unsyncFromClaudeCode(skillId);
 }
 
 function updateSkill(home, skillId) {
@@ -77,4 +83,51 @@ function updateSkill(home, skillId) {
   }
 }
 
-module.exports = { installSkill, removeSkill, updateSkill };
+function syncToClaudeCode(home, skillId) {
+  const homeDir = require('node:os').homedir();
+  const claudeSkillsDir = path.join(homeDir, '.claude', 'skills');
+  const linkPath = path.join(claudeSkillsDir, skillId);
+  const fanSkillDir = path.join(fanDir(home), 'skills', skillId);
+
+  // If Claude Code is not installed, skip silently
+  if (!fs.existsSync(path.join(homeDir, '.claude'))) {
+    return;
+  }
+
+  try {
+    fs.mkdirSync(claudeSkillsDir, { recursive: true });
+
+    // If a non-symlink already exists, leave it alone
+    if (fs.existsSync(linkPath)) {
+      const stat = fs.lstatSync(linkPath);
+      if (!stat.isSymbolicLink()) {
+        console.log(`Warning: ~/.claude/skills/${skillId} already exists (not a symlink), skipping sync.`);
+        return;
+      }
+      fs.rmSync(linkPath);
+    }
+
+    fs.symlinkSync(fanSkillDir, linkPath);
+  } catch (e) {
+    // Sync is best-effort; don't fail install if it doesn't work
+    console.log(`Note: Could not sync to Claude Code: ${e.message}`);
+  }
+}
+
+function unsyncFromClaudeCode(skillId) {
+  const homeDir = require('node:os').homedir();
+  const linkPath = path.join(homeDir, '.claude', 'skills', skillId);
+
+  try {
+    if (fs.existsSync(linkPath)) {
+      const stat = fs.lstatSync(linkPath);
+      if (stat.isSymbolicLink()) {
+        fs.rmSync(linkPath);
+      }
+    }
+  } catch (e) {
+    // Best-effort cleanup
+  }
+}
+
+module.exports = { installSkill, removeSkill, updateSkill, syncToClaudeCode, unsyncFromClaudeCode };
