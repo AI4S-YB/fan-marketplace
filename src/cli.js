@@ -88,8 +88,12 @@ function run(argv) {
       console.log('');
 
       const installed = loadInstalled(HOME);
-      if (installed.skills[skillId]) {
-        console.log(`  Status: INSTALLED (v${installed.skills[skillId].version})`);
+      const instInfo = installed.skills[skillId];
+      if (instInfo) {
+        console.log(`  Status: INSTALLED (v${instInfo.version})`);
+        if (skill.version !== instInfo.version) {
+          console.log(`  ${skill.version !== instInfo.version ? 'Update available: ' + instInfo.version + ' → ' + skill.version + ' (run `fan update ' + skillId + '`)' : ''}`);
+        }
       } else {
         console.log('  Status: not installed');
       }
@@ -220,9 +224,14 @@ function run(argv) {
           console.error(`Error: '${skillId}' is not installed.`);
           process.exit(1);
         }
+        const currentVersion = installed.skills[skillId].version;
         const result = updateSkill(HOME, skillId);
         if (result.success) {
-          console.log(`Updated: ${skillId}`);
+          if (result.version && result.previousVersion && result.version !== result.previousVersion) {
+            console.log(`Updated: ${skillId}  v${result.previousVersion} → v${result.version}`);
+          } else {
+            console.log(`Updated: ${skillId} (already latest)`);
+          }
         } else {
           console.error(`Update failed: ${result.error}`);
           process.exit(1);
@@ -234,8 +243,17 @@ function run(argv) {
           return;
         }
         for (const id of ids) {
+          const currentVersion = installed.skills[id].version;
           const result = updateSkill(HOME, id);
-          console.log(result.success ? `Updated: ${id}` : `Failed: ${id} — ${result.error}`);
+          if (result.success) {
+            if (result.version && result.previousVersion && result.version !== result.previousVersion) {
+              console.log(`Updated: ${id}  v${result.previousVersion} → v${result.version}`);
+            } else {
+              console.log(`Up to date: ${id}`);
+            }
+          } else {
+            console.log(`Failed: ${id} — ${result.error}`);
+          }
         }
       }
     });
@@ -326,6 +344,50 @@ function run(argv) {
         console.error(`Error: ${e.message}`);
         process.exit(1);
       }
+    });
+
+  // fan outdated
+  program.command('outdated')
+    .description('Show installed skills that have updates available')
+    .action(async () => {
+      const installed = loadInstalled(HOME);
+      const ids = Object.keys(installed.skills);
+      if (ids.length === 0) {
+        console.log('No skills installed.');
+        return;
+      }
+
+      // Fetch registry index
+      const registries = loadRegistries(HOME);
+      let allSkills = [];
+      for (const reg of registries) {
+        try {
+          const index = await fetchIndex(reg.url);
+          allSkills = allSkills.concat(index.skills);
+        } catch (e) {
+          console.error(`Warning: failed to fetch registry '${reg.name}': ${e.message}`);
+        }
+      }
+
+      const outdated = [];
+      for (const id of ids) {
+        const installedVersion = installed.skills[id].version;
+        const registrySkill = allSkills.find(s => s.id === id);
+        if (registrySkill && registrySkill.version !== installedVersion) {
+          outdated.push({ id, installed: installedVersion, latest: registrySkill.version });
+        }
+      }
+
+      if (outdated.length === 0) {
+        console.log('All installed skills are up to date.');
+        return;
+      }
+
+      console.log(`\nOutdated skills (${outdated.length}):\n`);
+      for (const o of outdated) {
+        console.log(`  ${o.id.padEnd(24)} ${o.installed} → ${o.latest}`);
+      }
+      console.log(`\nRun 'fan update' to update.\n`);
     });
 
   program.parse(argv);

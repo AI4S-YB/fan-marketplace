@@ -70,6 +70,31 @@ function removeSkill(home, skillId) {
   unsyncFromClaudeCode(skillId);
 }
 
+function refreshInstalledMetadata(home, skillId) {
+  const { loadInstalled, addInstalledSkill } = require('./config.js');
+  const { readSkillYaml } = require('./skill-yaml.js');
+
+  const installed = loadInstalled(home);
+  const prev = installed.skills[skillId];
+  const previousVersion = prev ? prev.version : 'unknown';
+
+  const skillDir = path.join(fanDir(home), 'skills', skillId);
+  const yaml = readSkillYaml(skillDir);
+
+  if (yaml) {
+    addInstalledSkill(home, skillId, {
+      version: yaml.version || previousVersion,
+      provides: (yaml.provides || []).map(p => typeof p === 'string' ? p : p.id).filter(Boolean),
+      requires: yaml.requires || [],
+      installed_at: new Date().toISOString(),
+      source: prev ? prev.source : 'unknown',
+      has_skill_yaml: true
+    });
+  }
+
+  return { previousVersion, newVersion: yaml ? yaml.version : previousVersion };
+}
+
 function updateSkill(home, skillId) {
   const skillDir = path.join(fanDir(home), 'skills', skillId);
   if (!fs.existsSync(skillDir)) {
@@ -77,7 +102,18 @@ function updateSkill(home, skillId) {
   }
   try {
     execSync('git pull --ff-only', { cwd: skillDir, stdio: 'pipe', timeout: 30000 });
-    return { success: true };
+
+    // Refresh metadata from updated skill.yaml
+    const versionInfo = refreshInstalledMetadata(home, skillId);
+
+    // Re-sync to Claude Code
+    syncToClaudeCode(home, skillId);
+
+    return {
+      success: true,
+      previousVersion: versionInfo.previousVersion,
+      version: versionInfo.newVersion
+    };
   } catch (e) {
     return { success: false, error: e.stderr ? e.stderr.toString() : e.message };
   }
@@ -130,4 +166,4 @@ function unsyncFromClaudeCode(skillId) {
   }
 }
 
-module.exports = { installSkill, removeSkill, updateSkill, syncToClaudeCode, unsyncFromClaudeCode };
+module.exports = { installSkill, removeSkill, updateSkill, refreshInstalledMetadata, syncToClaudeCode, unsyncFromClaudeCode };
