@@ -6,7 +6,7 @@ AI Skill registry and CLI for agricultural bioinformatics. Discover, install, an
 
 ```bash
 # Install fan-cli
-npm install -g https://github.com/AI4S-YB/fan-marketplace.git
+npm install -g fan-marketplace
 
 # Search and install skills
 fan search "plant"

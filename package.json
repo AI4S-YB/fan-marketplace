@@ -1,7 +1,10 @@
 {
-  "name": "fan-cli",
+  "name": "fan-marketplace",
   "version": "0.1.0",
   "description": "CLI for the fan skill marketplace — search, install, and manage AI coding agent skills",
+  "repository": "https://github.com/AI4S-YB/fan-marketplace",
+  "homepage": "https://ai4s-yb.github.io/fan-marketplace/",
+  "bugs": "https://github.com/AI4S-YB/fan-marketplace/issues",
   "bin": {
     "fan": "./bin/fan.js"
   },
