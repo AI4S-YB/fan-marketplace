@@ -59,9 +59,25 @@
       <pre>$ <span class="kw">curl -fsSL</span> https://raw.githubusercontent.com/AI4S-YB/fan-marketplace/main/install_claude_code.sh | <span class="kw">bash</span></pre>
 
       <p>该脚本会自动检测网络环境（国内/国外），选择最快的镜像源安装 nvm、Node.js 和 Claude Code CLI。</p>
-      <p>或手动安装：</p>
+
+      <h3>手动安装</h3>
+      <p><strong>1. 检查 Node.js</strong>——Claude Code 需要 Node.js 18 或更高版本：</p>
+      <pre>$ <span class="kw">node --version</span>
+<span class="cmt"># 如输出 v18.x.x / v20.x.x / v22.x.x 即满足要求</span>
+<span class="cmt"># 如提示 command not found，说明需要先安装 Node.js</span></pre>
+
+      <p><strong>2. 如未安装 Node.js</strong>，推荐通过 nvm 安装：</p>
+      <pre><span class="cmt"># macOS / Linux</span>
+$ <span class="kw">curl -o-</span> https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | <span class="kw">bash</span>
+<span class="cmt"># 重启终端，然后安装 Node.js LTS：</span>
+$ <span class="kw">nvm install --lts</span>
+$ <span class="kw">nvm use --lts</span>
+$ <span class="kw">node --version</span>                     <span class="cmt"># 确认版本 >= 18</span></pre>
+      <p>nvm 安装如遇网络问题，可参考 <a href="https://nvm.uihtm.com" target="_blank">nvm 国内镜像</a>。</p>
+
+      <p><strong>3. 确认 Node.js 版本后</strong>，通过 npm 安装 Claude Code：</p>
       <pre>$ <span class="kw">npm install -g</span> @anthropic-ai/claude-code
-$ claude --version</pre>
+$ <span class="kw">claude --version</span>                    <span class="cmt"># 确认安装成功</span></pre>
 
       <h3>Windows</h3>
       <p>Windows 用户推荐安装 <strong>WSL2</strong>（Windows Subsystem for Linux），在 Linux 子系统中运行 Claude Code：</p>
