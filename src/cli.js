@@ -215,9 +215,21 @@ function run(argv) {
   program.command('update')
     .description('Update installed skills')
     .argument('[skill-id]', 'Skill identifier (omit to update all)')
-    .action((skillId) => {
+    .action(async (skillId) => {
       ensureFanDir(HOME);
       const installed = loadInstalled(HOME);
+
+      // Fetch registry to check for newer versions
+      const registries = loadRegistries(HOME);
+      let allSkills = [];
+      for (const reg of registries) {
+        try {
+          const index = await fetchIndex(reg.url);
+          allSkills = allSkills.concat(index.skills);
+        } catch (e) {
+          console.error(`Warning: failed to fetch registry '${reg.name}': ${e.message}`);
+        }
+      }
 
       if (skillId) {
         if (!installed.skills[skillId]) {
@@ -225,6 +237,13 @@ function run(argv) {
           process.exit(1);
         }
         const currentVersion = installed.skills[skillId].version;
+        const registrySkill = allSkills.find(s => s.id === skillId);
+
+        if (registrySkill && registrySkill.version === currentVersion) {
+          console.log(`${skillId} is already at the latest version (v${currentVersion}).`);
+          return;
+        }
+
         const result = updateSkill(HOME, skillId);
         if (result.success) {
           if (result.version && result.previousVersion && result.version !== result.previousVersion) {
@@ -242,10 +261,19 @@ function run(argv) {
           console.log('No skills installed.');
           return;
         }
+        let updated = 0;
         for (const id of ids) {
           const currentVersion = installed.skills[id].version;
+          const registrySkill = allSkills.find(s => s.id === id);
+
+          if (registrySkill && registrySkill.version === currentVersion) {
+            console.log(`Up to date: ${id} (v${currentVersion})`);
+            continue;
+          }
+
           const result = updateSkill(HOME, id);
           if (result.success) {
+            updated++;
             if (result.version && result.previousVersion && result.version !== result.previousVersion) {
               console.log(`Updated: ${id}  v${result.previousVersion} → v${result.version}`);
             } else {
@@ -254,6 +282,9 @@ function run(argv) {
           } else {
             console.log(`Failed: ${id} — ${result.error}`);
           }
+        }
+        if (updated === 0 && ids.length > 0) {
+          console.log('All skills are up to date.');
         }
       }
     });
