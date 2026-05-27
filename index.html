@@ -210,6 +210,10 @@ provides:
     <span class="cmt"># run: echo hello          # 可选：CLI 调用的命令。不加则默认输出 SKILL.md</span>
 <span class="cmt"># 此 Skill 依赖的其他能力 ID 列表。如不依赖则留空</span>
 requires: []
+<span class="cmt"># 搜索关键词，用于 Marketplace 搜索和分类。建议 5-10 个</span>
+keywords: [<span class="str">bioinformatics</span>, <span class="str">genomics</span>]
+<span class="cmt"># 分类标签：core（核心） | community（社区贡献）</span>
+category: <span class="str">community</span>
 <span class="cmt"># 可选：此 Skill 需要的外部系统工具（非 Skill 依赖）</span>
 <span class="cmt"># external_deps:</span>
 <span class="cmt">#   - name: curl</span>
@@ -251,27 +255,14 @@ description: <span class="str">当用户需要 [做什么] 时使用此 Skill</s
 
     <div class="section">
       <h2>注册到 FAN Marketplace</h2>
-      <p>Skill 仓库推送后，Fork <a href="https://github.com/AI4S-YB/fan-marketplace" target="_blank">fan-marketplace</a>，在 <code>index.json</code> 的 <code>skills</code> 数组末尾添加：</p>
-      <pre>{
-  <span class="str">"id"</span>: <span class="str">"my-skill"</span>,
-  <span class="str">"display_name"</span>: <span class="str">"My Skill"</span>,
-  <span class="str">"description"</span>: <span class="str">"What this skill does"</span>,
-  <span class="str">"author"</span>: <span class="str">"your-handle"</span>,
-  <span class="str">"version"</span>: <span class="str">"0.1.0"</span>,
-  <span class="str">"license"</span>: <span class="str">"MIT"</span>,
-  <span class="str">"homepage"</span>: <span class="str">"https://github.com/YOU/my-skill"</span>,
-  <span class="str">"distribution"</span>: {
-    <span class="str">"type"</span>: <span class="str">"git"</span>,
-    <span class="str">"url"</span>: <span class="str">"https://github.com/YOU/my-skill.git"</span>
-  },
-  <span class="str">"provides"</span>: [<span class="str">"my-capability"</span>],
-  <span class="str">"requires"</span>: [],
-  <span class="str">"keywords"</span>: [<span class="str">"your-keywords"</span>],
-  <span class="str">"category"</span>: <span class="str">"community"</span>
-}</pre>
-      <p>提交 Pull Request，维护者审核通过后合并。之后所有人都可以通过 <code>fan install my-skill</code> 安装使用。</p>
+      <p>Skill 仓库推送后，只需在 <code>registry-list.json</code> 中添加你的仓库地址，提交 Pull Request：</p>
+      <pre><span class="cmt"># 在 fan-marketplace 仓库的 registry-list.json 末尾加一行：</span>
+<span class="str">"https://github.com/YOU/my-skill"</span></pre>
+      <p>就这么简单！CI 会自动从你仓库的 <code>skill.yaml</code> 读取所有信息，生成 <code>index.json</code>。你不需要手动写任何 JSON。</p>
+      <p>流程：Fork <a href="https://github.com/AI4S-YB/fan-marketplace" target="_blank">fan-marketplace</a> → 编辑 <code>registry-list.json</code> → 加一行仓库地址 → 提 PR → 维护者审核合并。</p>
     </div>
   </section>
+
 
   <!-- 关于 Tab -->
   <section class="tab-content" id="tab-about">

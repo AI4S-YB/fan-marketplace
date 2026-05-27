@@ -35,6 +35,11 @@
       "type": "array",
       "items": { "type": "string" }
     },
+    "keywords": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "category": { "type": "string" },
     "external_deps": {
       "type": "array",
       "items": {
