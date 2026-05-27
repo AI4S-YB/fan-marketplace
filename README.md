@@ -63,6 +63,23 @@ fan invoke <skill> <cap>       Invoke a capability
 fan registry add|list          Manage registries
 ```
 
+**Releasing a new version:**
+
+```bash
+# 1. Bump version
+npm version patch   # 0.1.0 → 0.1.1 (bug fixes)
+npm version minor   # 0.1.0 → 0.2.0 (new features)
+npm version major   # 0.1.0 → 1.0.0 (breaking changes)
+
+# 2. Push code + tag to GitHub
+git push origin main --tags
+
+# 3. Publish to npm
+npm publish
+```
+
+Changes to GitHub do NOT update npm automatically. You must run `npm publish` after each release.
+
 ## License
 
 MIT
