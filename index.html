@@ -100,6 +100,20 @@
     line-height: 1;
   }
 
+  /* Lang switch */
+  .lang-switch {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 11px;
+    padding: 4px 10px;
+    margin-left: 16px;
+    letter-spacing: 1px;
+  }
+  .lang-switch:hover { color: var(--text); border-color: var(--accent); }
+
   /* ===== Main ===== */
   .main {
     flex: 1;
@@ -325,17 +339,19 @@
   <!-- ===== Header ===== -->
   <header class="header">
     <div class="header-brand">
-      <span class="header-logo">FAN Marketplace</span>
+      <span class="header-logo" data-i18n="site.title">FAN Marketplace</span>
     </div>
 
     <button class="hamburger" id="hamburger" aria-label="Toggle navigation">&#9776;</button>
 
     <nav class="header-nav" id="nav">
-      <button class="nav-tab active" data-tab="tab-marketplace">Marketplace</button>
-      <button class="nav-tab" data-tab="tab-guide">Guide</button>
-      <button class="nav-tab" data-tab="tab-contribute">Contribute</button>
-      <button class="nav-tab" data-tab="tab-about">About</button>
+      <button class="nav-tab active" data-tab="tab-marketplace" data-i18n="tab.marketplace">Marketplace</button>
+      <button class="nav-tab" data-tab="tab-guide" data-i18n="tab.guide">Guide</button>
+      <button class="nav-tab" data-tab="tab-contribute" data-i18n="tab.contribute">Contribute</button>
+      <button class="nav-tab" data-tab="tab-about" data-i18n="tab.about">About</button>
     </nav>
+
+    <button class="lang-switch" id="langSwitch" aria-label="Toggle language">EN</button>
   </header>
 
   <!-- ===== Main Content ===== -->
@@ -344,13 +360,13 @@
     <!-- Marketplace Tab -->
     <section class="tab-content active" id="tab-marketplace">
       <div class="hero">
-        <h1>AI Skills for 农业科学与生物育种</h1>
-        <p>从生物问题到分析结果 — 发现并安装模块化 AI 技能。覆盖植物基因组学、育种分析、生物信息学研究。由 FAN 生态驱动。</p>
-        <div class="hero-install">$ npm install -g fan-cli</div>
+        <h1 data-i18n="hero.title">AI Skills for 农业科学与生物育种</h1>
+        <p data-i18n="hero.desc">从生物问题到分析结果 — 发现并安装模块化 AI 技能。覆盖植物基因组学、育种分析、生物信息学研究。由 FAN 生态驱动。</p>
+        <div class="hero-install" data-i18n="hero.install">$ npm install -g fan-cli</div>
       </div>
 
       <div class="search-wrap">
-        <input class="search-input" type="text" id="search" placeholder="&gt; search skills...">
+        <input class="search-input" type="text" id="search" data-i18n-placeholder="search.placeholder" placeholder="&gt; search skills...">
       </div>
 
       <div class="stats" id="stats">8 skills available</div>
@@ -450,47 +466,47 @@
     <!-- Guide Tab -->
     <section class="tab-content" id="tab-guide">
       <div class="section">
-        <h2>1. 安装 Claude Code</h2>
-        <p>Claude Code 是运行 AI Skill 的编程 agent 环境。需要 Node.js 18+。我们提供了一键安装脚本：</p>
+        <h2 data-i18n="guide.title1">1. 安装 Claude Code</h2>
+        <p data-i18n="guide.p1">Claude Code 是运行 AI Skill 的编程 agent 环境。需要 Node.js 18+。我们提供了一键安装脚本：</p>
 
-        <h3>macOS / Linux</h3>
+        <h3 data-i18n="guide.macos">macOS / Linux</h3>
         <pre>$ <span class="kw">curl -fsSL</span> https://raw.githubusercontent.com/AI4S-YB/fan-marketplace/main/install_claude_code.sh | <span class="kw">bash</span></pre>
-        <p>该脚本会自动检测网络环境（国内/国外），选择最快的镜像源安装 nvm、Node.js 和 Claude Code CLI。</p>
-        <p>或手动安装：</p>
+        <p data-i18n="guide.scriptnote">该脚本会自动检测网络环境（国内/国外），选择最快的镜像源安装 nvm、Node.js 和 Claude Code CLI。</p>
+        <p data-i18n="guide.manual">或手动安装：</p>
         <pre>$ <span class="kw">npm install -g</span> @anthropic-ai/claude-code
 $ claude --version</pre>
 
-        <h3>Windows</h3>
-        <p>Windows 用户推荐安装 <strong>WSL2</strong>（Windows Subsystem for Linux），在 Linux 子系统中运行 Claude Code：</p>
+        <h3 data-i18n="guide.windows">Windows</h3>
+        <p data-i18n-html="guide.wsl_html">Windows 用户推荐安装 <strong>WSL2</strong>（Windows Subsystem for Linux），在 Linux 子系统中运行 Claude Code：</p>
         <pre><span class="cmt"># 以管理员身份打开 PowerShell，执行：</span>
 $ <span class="kw">wsl --install</span>
 <span class="cmt"># 重启后进入 Ubuntu 终端，然后按上方 macOS/Linux 步骤操作</span></pre>
-        <p>WSL2 安装指南：<a href="https://learn.microsoft.com/en-us/windows/wsl/install" target="_blank">Microsoft WSL 官方文档</a></p>
+        <p data-i18n-html="guide.wslnote_html">WSL2 安装指南：<a href="https://learn.microsoft.com/en-us/windows/wsl/install" target="_blank">Microsoft WSL 官方文档</a></p>
 
-        <p>安装完成后，终端输入 <code>claude</code> 启动 Claude Code。首次使用需要 Anthropic API Key 或登录 Claude 账号。</p>
+        <p data-i18n-html="guide.postinstall_html">安装完成后，终端输入 <code>claude</code> 启动 Claude Code。首次使用需要 Anthropic API Key 或登录 Claude 账号。</p>
       </div>
 
       <div class="section">
-        <h2>2. 配置 Settings — 接入第三方模型</h2>
-        <p>Claude Code 默认使用 Anthropic 官方模型。如果你需要接入 DeepSeek、GLM 等第三方模型以降低成本或满足合规要求，编辑 <code>~/.claude/settings.json</code>：</p>
+        <h2 data-i18n="guide.title2">2. 配置 Settings — 接入第三方模型</h2>
+        <p data-i18n-html="guide.p2_html">Claude Code 默认使用 Anthropic 官方模型。如果你需要接入 DeepSeek、GLM 等第三方模型以降低成本或满足合规要求，编辑 <code>~/.claude/settings.json</code>：</p>
 
-        <h3>接入 DeepSeek 模型</h3>
+        <h3 data-i18n="guide.deepseek">接入 DeepSeek 模型</h3>
         <pre>{
   <span class="str">"model"</span>: <span class="str">"deepseek/deepseek-chat"</span>,
   <span class="str">"apiKey"</span>: <span class="str">"sk-your-deepseek-api-key"</span>,
   <span class="str">"baseURL"</span>: <span class="str">"https://api.deepseek.com/v1"</span>
 }</pre>
-        <p>DeepSeek 是国内可用、性价比高的大模型。获取 API Key：<a href="https://platform.deepseek.com" target="_blank">platform.deepseek.com</a></p>
+        <p data-i18n-html="guide.deepseeknote_html">DeepSeek 是国内可用、性价比高的大模型。获取 API Key：<a href="https://platform.deepseek.com" target="_blank">platform.deepseek.com</a></p>
 
-        <h3>接入智谱 GLM 模型</h3>
+        <h3 data-i18n="guide.glm">接入智谱 GLM 模型</h3>
         <pre>{
   <span class="str">"model"</span>: <span class="str">"zhipuai/glm-4"</span>,
   <span class="str">"apiKey"</span>: <span class="str">"your-zhipu-api-key"</span>,
   <span class="str">"baseURL"</span>: <span class="str">"https://open.bigmodel.cn/api/paas/v4"</span>
 }</pre>
-        <p>智谱 GLM-4 是国内合规场景的首选。获取 API Key：<a href="https://open.bigmodel.cn" target="_blank">open.bigmodel.cn</a></p>
+        <p data-i18n-html="guide.glmnote_html">智谱 GLM-4 是国内合规场景的首选。获取 API Key：<a href="https://open.bigmodel.cn" target="_blank">open.bigmodel.cn</a></p>
 
-        <h3>启用 Fan Skill</h3>
+        <h3 data-i18n="guide.enablefan">启用 Fan Skill</h3>
         <pre>{
   <span class="str">"enabledPlugins"</span>: {},
   <span class="str">"extraKnownMarketplaces"</span>: {
@@ -505,15 +521,15 @@ $ <span class="kw">wsl --install</span>
       </div>
 
       <div class="section">
-        <h2>3. 安装 fan-cli</h2>
-        <p><code>fan</code> 命令行工具用于搜索、安装和管理 FAN Marketplace 上的 Skill。</p>
+        <h2 data-i18n="guide.title3">3. 安装 fan-cli</h2>
+        <p data-i18n-html="guide.p3_html"><code>fan</code> 命令行工具用于搜索、安装和管理 FAN Marketplace 上的 Skill。</p>
         <pre>$ <span class="kw">npm install -g</span> fan-cli
 $ fan --help</pre>
-        <p>fan-cli 负责连接 marketplace registry 与本地 AI 编程环境。安装的 Skill 自动同步到 Claude Code。</p>
+        <p data-i18n="guide.p3note">fan-cli 负责连接 marketplace registry 与本地 AI 编程环境。安装的 Skill 自动同步到 Claude Code。</p>
       </div>
 
       <div class="section">
-        <h2>4. 发现与安装 Skill</h2>
+        <h2 data-i18n="guide.title4">4. 发现与安装 Skill</h2>
         <pre>$ fan search <span class="str">"plant"</span>               <span class="cmt">// 搜索 Skill</span>
 $ fan info fan-skill              <span class="cmt">// 查看 Skill 详情</span>
 $ fan install fan-skill           <span class="cmt">// 安装 Skill</span>
@@ -521,27 +537,27 @@ $ fan list                        <span class="cmt">// 列出已安装的 Skill<
 $ fan capabilities                <span class="cmt">// 显示所有可用能力</span>
 $ fan which consult-analysis      <span class="cmt">// 查找能力提供者</span>
 $ fan invoke fan-skill consult-analysis  <span class="cmt">// 调用某个能力</span></pre>
-        <p>安装后重启 Claude Code（或开启新对话），Skill 会自动出现在可用技能列表中。</p>
+        <p data-i18n="guide.p4">安装后重启 Claude Code（或开启新对话），Skill 会自动出现在可用技能列表中。</p>
       </div>
 
       <div class="section">
-        <h2>5. 以 Claude Code 插件方式安装（非官方）</h2>
-        <p>如果已在使用 Claude Code，可直接通过插件市场注册 FAN：</p>
+        <h2 data-i18n="guide.title5">5. 以 Claude Code 插件方式安装（非官方）</h2>
+        <p data-i18n="guide.p5">如果已在使用 Claude Code，可直接通过插件市场注册 FAN：</p>
         <pre>$ <span class="cmt">// 在 Claude Code 对话中执行：</span>
 /plugin marketplace add <span class="str">AI4S-YB/fan-marketplace</span>
 /plugin install <span class="str">fan-skill@fan-marketplace</span></pre>
-        <p>此方式安装的 Skill 同样由 fan-cli 管理依赖同步。两种安装方式互通，<code>fan list</code> 均可见。</p>
+        <p data-i18n-html="guide.p5note_html">此方式安装的 Skill 同样由 fan-cli 管理依赖同步。两种安装方式互通，<code>fan list</code> 均可见。</p>
       </div>
     </section>
 
     <!-- Contribute Tab -->
     <section class="tab-content" id="tab-contribute">
       <div class="section">
-        <h2>Create Your Own Skill</h2>
-        <p>Every skill is a git repository with two essential files: <code>skill.yaml</code> (machine-readable manifest) and <code>SKILL.md</code> (AI agent context).</p>
+        <h2 data-i18n="contrib.title">Create Your Own Skill</h2>
+        <p data-i18n-html="contrib.intro_html">Every skill is a git repository with two essential files: <code>skill.yaml</code> (machine-readable manifest) and <code>SKILL.md</code> (AI agent context).</p>
 
-        <h3>Step 1: Write skill.yaml</h3>
-        <p>The manifest declares your skill's identity, capabilities, and dependencies.</p>
+        <h3 data-i18n="contrib.step1">Step 1: Write skill.yaml</h3>
+        <p data-i18n="contrib.step1desc">The manifest declares your skill's identity, capabilities, and dependencies.</p>
         <pre>name: <span class="str">my-skill</span>
 version: <span class="str">0.1.0</span>
 display_name: <span class="str">"My Skill"</span>
@@ -557,10 +573,10 @@ provides:
     description: <span class="str">What this capability does</span>
     run: <span class="str">echo hello</span>
 requires: []</pre>
-        <p>Key fields: <code>name</code> and <code>version</code> are required. <code>provides</code> lists what your skill can do — each capability can have a <code>run</code> command for CLI invocation. <code>requires</code> lists capabilities your skill depends on.</p>
+        <p data-i18n-html="contrib.step1note_html">Key fields: <code>name</code> and <code>version</code> are required. <code>provides</code> lists what your skill can do — each capability can have a <code>run</code> command for CLI invocation. <code>requires</code> lists capabilities your skill depends on.</p>
 
-        <h3>Step 2: Write SKILL.md</h3>
-        <p>SKILL.md is the instruction file loaded into the AI agent's context. Write clear, direct instructions the AI will follow.</p>
+        <h3 data-i18n="contrib.step2">Step 2: Write SKILL.md</h3>
+        <p data-i18n="contrib.step2desc">SKILL.md is the instruction file loaded into the AI agent's context. Write clear, direct instructions the AI will follow.</p>
         <pre>---
 name: <span class="str">my-skill</span>
 description: <span class="str">What this skill does for AI agents</span>
@@ -576,16 +592,16 @@ You are an AI assistant specialized in [domain]. When the user asks about [topic
 <span class="cmt">## Constraints</span>
 - Always [rule]
 - Never [rule]</pre>
-        <p>The YAML frontmatter (between <code>---</code> markers) is required by Claude Code. The body is free-form Markdown.</p>
+        <p data-i18n-html="contrib.step2note_html">The YAML frontmatter (between <code>---</code> markers) is required by Claude Code. The body is free-form Markdown.</p>
 
-        <h3>Step 3: File Structure</h3>
+        <h3 data-i18n="contrib.step3">Step 3: File Structure</h3>
         <pre>my-skill/
 ├── skill.yaml         <span class="cmt">// Marketplace manifest</span>
 ├── SKILL.md           <span class="cmt">// AI agent context</span>
 └── <span class="cmt">// Any other files — scripts, reference docs, data</span></pre>
 
-        <h3>Step 4: Register on FAN Marketplace</h3>
-        <p>Fork <a href="https://github.com/AI4S-YB/fan-marketplace" target="_blank">fan-marketplace</a>, add your skill entry to <code>index.json</code>, and submit a pull request:</p>
+        <h3 data-i18n="contrib.step4">Step 4: Register on FAN Marketplace</h3>
+        <p data-i18n-html="contrib.step4desc_html">Fork <a href="https://github.com/AI4S-YB/fan-marketplace" target="_blank">fan-marketplace</a>, add your skill entry to <code>index.json</code>, and submit a pull request:</p>
         <pre>{
   <span class="str">"id"</span>: <span class="str">"my-skill"</span>,
   <span class="str">"display_name"</span>: <span class="str">"My Skill"</span>,
@@ -603,31 +619,31 @@ You are an AI assistant specialized in [domain]. When the user asks about [topic
   <span class="str">"keywords"</span>: [<span class="str">"your-keywords"</span>],
   <span class="str">"category"</span>: <span class="str">"community"</span>
 }</pre>
-        <p>Once merged, your skill is available to everyone: <code>$ fan install my-skill</code></p>
+        <p data-i18n-html="contrib.step4note_html">Once merged, your skill is available to everyone: <code>$ fan install my-skill</code></p>
       </div>
     </section>
 
     <!-- About Tab -->
     <section class="tab-content" id="tab-about">
       <div class="section">
-        <h2>关于 FAN</h2>
-        <p>FAN 是一个面向农业科学与生物育种的 AI 技能开放生态。我们的目标是通过 AI 工具连接生物学问题与计算分析，让每一位研究者都能获得专业的生物信息学支持。</p>
-        <p>旗舰项目 <strong>fan-skill</strong> 覆盖 29 个分析领域 —— 从 GWAS、基因组选择到转录组学、系统发育。每个领域结合专家知识（C 层决策规则）与 AI 推理（B 层智能），引导研究者从科学问题到可发表的结果。</p>
+        <h2 data-i18n="about.title1">关于 FAN</h2>
+        <p data-i18n="about.p1">FAN 是一个面向农业科学与生物育种的 AI 技能开放生态。我们的目标是通过 AI 工具连接生物学问题与计算分析，让每一位研究者都能获得专业的生物信息学支持。</p>
+        <p data-i18n-html="about.p2_html">旗舰项目 <strong>fan-skill</strong> 覆盖 29 个分析领域 —— 从 GWAS、基因组选择到转录组学、系统发育。每个领域结合专家知识（C 层决策规则）与 AI 推理（B 层智能），引导研究者从科学问题到可发表的结果。</p>
       </div>
 
       <div class="section">
-        <h2>运行机制</h2>
-        <p>Skill 是 AI agent 插件。安装后，Claude Code 获得该领域的专业知识、分析流程和工具集成。开启对话，AI 即刻具备领域专长。</p>
-        <p>Skill 之间可以<strong>互相调用</strong>。fan-skill 负责分析规划，当需要 NCBI 数据时，自动发现并调用 ncbi-downloader skill。生态随每个新 skill 不断成长。</p>
+        <h2 data-i18n="about.title2">运行机制</h2>
+        <p data-i18n="about.p3">Skill 是 AI agent 插件。安装后，Claude Code 获得该领域的专业知识、分析流程和工具集成。开启对话，AI 即刻具备领域专长。</p>
+        <p data-i18n-html="about.p4_html">Skill 之间可以<strong>互相调用</strong>。fan-skill 负责分析规划，当需要 NCBI 数据时，自动发现并调用 ncbi-downloader skill。生态随每个新 skill 不断成长。</p>
       </div>
 
       <div class="section">
-        <h2>链接</h2>
-        <p>
+        <h2 data-i18n="about.title3">链接</h2>
+        <p data-i18n-html="about.p5_html">
           <a href="https://github.com/AI4S-YB/fan-marketplace" target="_blank">fan-marketplace</a> — Registry、CLI、本页面<br>
           <a href="https://github.com/AI4S-YB/fan-skill" target="_blank">fan-skill</a> — Plant Bioinformatics Engine（29 个分析领域）<br>
         </p>
-        <p style="margin-top:16px">基于 <a href="https://github.com/AI4S-YB/fan-marketplace" target="_blank">fan-cli</a> 工具构建。MIT License。</p>
+        <p style="margin-top:16px" data-i18n-html="about.p7_html">基于 <a href="https://github.com/AI4S-YB/fan-marketplace" target="_blank">fan-cli</a> 工具构建。MIT License。</p>
       </div>
     </section>
 
@@ -635,135 +651,317 @@ You are an AI assistant specialized in [domain]. When the user asks about [topic
 
   <!-- ===== Footer ===== -->
   <footer class="footer">
-    <span>FAN Marketplace</span>
+    <span data-i18n="footer.text">FAN Marketplace</span>
     <span> &middot; </span>
     <a href="https://github.com/AI4S-YB/fan-marketplace">GitHub</a>
   </footer>
 
   <script>
-    var REGISTRY_URL = 'https://cdn.jsdelivr.net/gh/AI4S-YB/fan-marketplace@main/index.json';
+// ===== I18N Dictionary =====
+var I18N = {
+  zh: {
+    'site.title': 'FAN Marketplace',
+    'tab.marketplace': 'Marketplace',
+    'tab.guide': 'Guide',
+    'tab.contribute': 'Contribute',
+    'tab.about': 'About',
+    'hero.title': 'AI Skills for 农业科学与生物育种',
+    'hero.desc': '从生物问题到分析结果 — 发现并安装模块化 AI 技能。覆盖植物基因组学、育种分析、生物信息学研究。由 FAN 生态驱动。',
+    'hero.install': '$ npm install -g fan-cli',
+    'search.placeholder': '> 搜索 Skill...（如 plant, ncbi, genomics）',
+    'stats.count': '{n} 个 Skill',
+    'skills.empty': '未找到匹配的 Skill。',
+    'skills.loaderror': '加载失败，请检查网络后重试。',
+    // Guide tab
+    'guide.title1': '1. 安装 Claude Code',
+    'guide.p1': 'Claude Code 是运行 AI Skill 的编程 agent 环境。需要 Node.js 18+。我们提供了一键安装脚本：',
+    'guide.macos': 'macOS / Linux',
+    'guide.scriptnote': '该脚本会自动检测网络环境（国内/国外），选择最快的镜像源安装 nvm、Node.js 和 Claude Code CLI。',
+    'guide.manual': '或手动安装：',
+    'guide.windows': 'Windows',
+    'guide.wsl_html': 'Windows 用户推荐安装 <strong>WSL2</strong>（Windows Subsystem for Linux），在 Linux 子系统中运行 Claude Code：',
+    'guide.wslnote_html': 'WSL2 安装指南：<a href="https://learn.microsoft.com/en-us/windows/wsl/install" target="_blank">Microsoft WSL 官方文档</a>',
+    'guide.postinstall_html': '安装完成后，终端输入 <code>claude</code> 启动 Claude Code。首次使用需要 Anthropic API Key 或登录 Claude 账号。',
+    'guide.title2': '2. 配置 Settings — 接入第三方模型',
+    'guide.p2_html': 'Claude Code 默认使用 Anthropic 官方模型。如果你需要接入 DeepSeek、GLM 等第三方模型以降低成本或满足合规要求，编辑 <code>~/.claude/settings.json</code>：',
+    'guide.deepseek': '接入 DeepSeek 模型',
+    'guide.deepseeknote_html': 'DeepSeek 是国内可用、性价比高的大模型。获取 API Key：<a href="https://platform.deepseek.com" target="_blank">platform.deepseek.com</a>',
+    'guide.glm': '接入智谱 GLM 模型',
+    'guide.glmnote_html': '智谱 GLM-4 是国内合规场景的首选。获取 API Key：<a href="https://open.bigmodel.cn" target="_blank">open.bigmodel.cn</a>',
+    'guide.enablefan': '启用 Fan Skill',
+    'guide.title3': '3. 安装 fan-cli',
+    'guide.p3_html': '<code>fan</code> 命令行工具用于搜索、安装和管理 FAN Marketplace 上的 Skill。',
+    'guide.p3note': 'fan-cli 负责连接 marketplace registry 与本地 AI 编程环境。安装的 Skill 自动同步到 Claude Code。',
+    'guide.title4': '4. 发现与安装 Skill',
+    'guide.p4': '安装后重启 Claude Code（或开启新对话），Skill 会自动出现在可用技能列表中。',
+    'guide.title5': '5. 以 Claude Code 插件方式安装（非官方）',
+    'guide.p5': '如果已在使用 Claude Code，可直接通过插件市场注册 FAN：',
+    'guide.p5note_html': '此方式安装的 Skill 同样由 fan-cli 管理依赖同步。两种安装方式互通，<code>fan list</code> 均可见。',
+    // Contribute tab
+    'contrib.title': '创建你自己的 Skill',
+    'contrib.intro_html': '每个 Skill 是一个包含 <code>skill.yaml</code> 清单文件和 <code>SKILL.md</code> AI 上下文文件的 git 仓库。',
+    'contrib.step1': 'Step 1: 编写 skill.yaml',
+    'contrib.step1desc': '清单文件声明 Skill 的标识、能力和依赖。',
+    'contrib.step1note_html': '关键字段：<code>name</code> 和 <code>version</code> 必填。<code>provides</code> 列出 Skill 能做什么，每个 capability 可配置 <code>run</code> 命令供 CLI 调用。<code>requires</code> 列出此 Skill 依赖的能力。',
+    'contrib.step2': 'Step 2: 编写 SKILL.md',
+    'contrib.step2desc': 'SKILL.md 是加载到 AI agent 上下文的指令文件。编写清晰、直接的指令给 AI。',
+    'contrib.step2note_html': 'YAML frontmatter（<code>---</code> 标记之间）是 Claude Code 必需的。正文为自由 Markdown 格式。',
+    'contrib.step3': 'Step 3: 文件结构',
+    'contrib.step4': 'Step 4: 注册到 FAN Marketplace',
+    'contrib.step4desc_html': 'Fork <a href="https://github.com/AI4S-YB/fan-marketplace" target="_blank">fan-marketplace</a>，在 <code>index.json</code> 中添加你的 Skill 条目，提交 PR：',
+    'contrib.step4note_html': '合并后，所有人都可以通过 <code>fan install my-skill</code> 安装你的 Skill。',
+    // About tab
+    'about.title1': '关于 FAN',
+    'about.p1': 'FAN 是一个面向农业科学与生物育种的 AI 技能开放生态。我们的目标是通过 AI 工具连接生物学问题与计算分析，让每一位研究者都能获得专业的生物信息学支持。',
+    'about.p2_html': '旗舰项目 <strong>fan-skill</strong> 覆盖 29 个分析领域 —— 从 GWAS、基因组选择到转录组学、系统发育。每个领域结合专家知识（C 层决策规则）与 AI 推理（B 层智能），引导研究者从科学问题到可发表的结果。',
+    'about.title2': '运行机制',
+    'about.p3': 'Skill 是 AI agent 插件。安装后，Claude Code 获得该领域的专业知识、分析流程和工具集成。开启对话，AI 即刻具备领域专长。',
+    'about.p4_html': 'Skill 之间可以<strong>互相调用</strong>。fan-skill 负责分析规划，当需要 NCBI 数据时，自动发现并调用 ncbi-downloader skill。生态随每个新 skill 不断成长。',
+    'about.title3': '链接',
+    'about.p5_html': '<a href="https://github.com/AI4S-YB/fan-marketplace" target="_blank">fan-marketplace</a> — Registry、CLI、本页面<br><a href="https://github.com/AI4S-YB/fan-skill" target="_blank">fan-skill</a> — Plant Bioinformatics Engine（29 个分析领域）<br>',
+    'about.p7_html': '基于 <a href="https://github.com/AI4S-YB/fan-marketplace" target="_blank">fan-cli</a> 工具构建。MIT License。',
+    // Footer
+    'footer.text': 'FAN Marketplace'
+  },
+  en: {
+    'site.title': 'FAN Marketplace',
+    'tab.marketplace': 'Marketplace',
+    'tab.guide': 'Guide',
+    'tab.contribute': 'Contribute',
+    'tab.about': 'About',
+    'hero.title': 'AI Skills for Agricultural Science & Breeding',
+    'hero.desc': 'From biological questions to analytical results — discover and install modular AI skills. Covering plant genomics, breeding analytics, and bioinformatics research. Powered by the FAN ecosystem.',
+    'hero.install': '$ npm install -g fan-cli',
+    'search.placeholder': '> search skills... (e.g. plant, ncbi, genomics)',
+    'stats.count': '{n} skill(s)',
+    'skills.empty': 'No skills found.',
+    'skills.loaderror': 'Failed to load registry. Check your connection and try again.',
+    // Guide tab
+    'guide.title1': '1. Install Claude Code',
+    'guide.p1': 'Claude Code is the AI coding agent that runs skills. Requires Node.js 18+. We provide a one-click install script:',
+    'guide.macos': 'macOS / Linux',
+    'guide.scriptnote': 'This script auto-detects your network environment and selects the fastest mirror for nvm, Node.js, and Claude Code CLI.',
+    'guide.manual': 'Or install manually:',
+    'guide.windows': 'Windows',
+    'guide.wsl_html': 'Windows users should install <strong>WSL2</strong> (Windows Subsystem for Linux) and run Claude Code within the Linux environment:',
+    'guide.wslnote_html': 'WSL2 installation guide: <a href="https://learn.microsoft.com/en-us/windows/wsl/install" target="_blank">Microsoft WSL Docs</a>',
+    'guide.postinstall_html': 'After installation, run <code>claude</code> in your terminal. First-time use requires an Anthropic API Key or Claude account login.',
+    'guide.title2': '2. Configure Settings — Third-Party Models',
+    'guide.p2_html': 'Claude Code defaults to Anthropic models. To use DeepSeek, GLM, or other third-party models for cost savings or compliance, edit <code>~/.claude/settings.json</code>:',
+    'guide.deepseek': 'Using DeepSeek',
+    'guide.deepseeknote_html': 'DeepSeek offers high cost-effectiveness. Get API Key: <a href="https://platform.deepseek.com" target="_blank">platform.deepseek.com</a>',
+    'guide.glm': 'Using Zhipu GLM',
+    'guide.glmnote_html': 'Zhipu GLM-4 is a strong choice for compliance scenarios. Get API Key: <a href="https://open.bigmodel.cn" target="_blank">open.bigmodel.cn</a>',
+    'guide.enablefan': 'Enable Fan Skill',
+    'guide.title3': '3. Install fan-cli',
+    'guide.p3_html': 'The <code>fan</code> command searches, installs, and manages skills from the FAN Marketplace.',
+    'guide.p3note': 'fan-cli bridges the marketplace registry with your local AI coding environment. Installed skills auto-sync to Claude Code.',
+    'guide.title4': '4. Discover & Install Skills',
+    'guide.p4': 'After installation, restart Claude Code (or start a new conversation). The skill appears in the available skills list automatically.',
+    'guide.title5': '5. Install as Claude Code Plugin (Unofficial)',
+    'guide.p5': 'If you already use Claude Code, register FAN via the plugin marketplace:',
+    'guide.p5note_html': 'Skills installed this way are still managed by fan-cli for dependency sync. Both methods interoperate — <code>fan list</code> shows all installed skills.',
+    // Contribute tab
+    'contrib.title': 'Create Your Own Skill',
+    'contrib.intro_html': 'Every skill is a git repository with two essential files: <code>skill.yaml</code> (machine-readable manifest) and <code>SKILL.md</code> (AI agent context).',
+    'contrib.step1': 'Step 1: Write skill.yaml',
+    'contrib.step1desc': 'The manifest declares your skill\'s identity, capabilities, and dependencies.',
+    'contrib.step1note_html': 'Key fields: <code>name</code> and <code>version</code> are required. <code>provides</code> lists what your skill can do — each capability can have a <code>run</code> command for CLI invocation. <code>requires</code> lists capabilities your skill depends on.',
+    'contrib.step2': 'Step 2: Write SKILL.md',
+    'contrib.step2desc': 'SKILL.md is the instruction file loaded into the AI agent\'s context. Write clear, direct instructions.',
+    'contrib.step2note_html': 'The YAML frontmatter (between <code>---</code> markers) is required by Claude Code. The body is free-form Markdown.',
+    'contrib.step3': 'Step 3: File Structure',
+    'contrib.step4': 'Step 4: Register on FAN Marketplace',
+    'contrib.step4desc_html': 'Fork <a href="https://github.com/AI4S-YB/fan-marketplace" target="_blank">fan-marketplace</a>, add your skill entry to <code>index.json</code>, and submit a pull request:',
+    'contrib.step4note_html': 'Once merged, your skill is available to everyone via <code>fan install my-skill</code>.',
+    // About tab
+    'about.title1': 'About FAN',
+    'about.p1': 'FAN is an open ecosystem of AI skills for agricultural science and breeding. Our mission is to bridge biological questions with computational analysis through AI-powered tools, making professional bioinformatics accessible to every researcher.',
+    'about.p2_html': 'The flagship <strong>fan-skill</strong> engine covers 29 analysis domains — from GWAS and genomic selection to transcriptomics and phylogenetics. Each domain combines expert knowledge (C-layer decision rules) with AI reasoning (B-layer intelligence) to guide researchers from question to publication-ready results.',
+    'about.title2': 'How It Works',
+    'about.p3': 'Skills are AI agent plugins. Once installed, Claude Code gains domain-specific knowledge, analysis pipelines, and tool integrations. Start a conversation and the AI immediately has domain expertise.',
+    'about.p4_html': 'Skills can <strong>call each other</strong> at runtime. fan-skill handles analysis planning — when NCBI data is needed, it discovers and invokes the ncbi-downloader skill. The ecosystem grows with each new skill.',
+    'about.title3': 'Links',
+    'about.p5_html': '<a href="https://github.com/AI4S-YB/fan-marketplace" target="_blank">fan-marketplace</a> — Registry, CLI, and this website<br><a href="https://github.com/AI4S-YB/fan-skill" target="_blank">fan-skill</a> — Plant Bioinformatics Engine (29 analysis domains)<br>',
+    'about.p7_html': 'Built with the <a href="https://github.com/AI4S-YB/fan-marketplace" target="_blank">fan-cli</a> toolkit. MIT License.',
+    // Footer
+    'footer.text': 'FAN Marketplace'
+  }
+};
 
-    // Tab switching
-    document.querySelectorAll('.nav-tab').forEach(function(tab) {
-      tab.addEventListener('click', function(e) {
-        e.preventDefault();
-        var target = this.dataset.tab;
-        document.querySelectorAll('.nav-tab').forEach(function(t) { t.classList.remove('active'); });
-        this.classList.add('active');
-        document.querySelectorAll('.tab-content').forEach(function(t) { t.classList.remove('active'); });
-        document.getElementById(target).classList.add('active');
+// ===== I18N Logic =====
+var currentLocale = 'zh';
 
-        // Close mobile nav after selection
-        var nav = document.getElementById('nav');
-        if (nav) nav.classList.remove('open');
-      });
-    });
+function detectLocale() {
+  var stored = localStorage.getItem('fan-lang');
+  if (stored === 'zh' || stored === 'en') return stored;
+  if (navigator.language && navigator.language.startsWith('zh')) return 'zh';
+  return 'zh';
+}
 
-    // Mobile nav toggle
-    var hamburger = document.getElementById('hamburger');
-    if (hamburger) {
-      hamburger.addEventListener('click', function() {
-        var nav = document.getElementById('nav');
-        if (nav) nav.classList.toggle('open');
-      });
+function setLocale(locale) {
+  currentLocale = locale;
+  localStorage.setItem('fan-lang', locale);
+  applyLocale();
+  updateLangSwitch();
+}
+
+function applyLocale() {
+  var dict = I18N[currentLocale];
+  // Simple text replacements
+  document.querySelectorAll('[data-i18n]').forEach(function(el) {
+    var key = el.getAttribute('data-i18n');
+    if (dict[key]) el.textContent = dict[key];
+  });
+  // HTML content replacements
+  document.querySelectorAll('[data-i18n-html]').forEach(function(el) {
+    var key = el.getAttribute('data-i18n-html');
+    if (dict[key]) el.innerHTML = dict[key];
+  });
+  // Placeholder attributes
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(function(el) {
+    var key = el.getAttribute('data-i18n-placeholder');
+    if (dict[key]) el.setAttribute('placeholder', dict[key]);
+  });
+  // Title
+  if (dict['site.title']) document.title = dict['site.title'];
+  // Re-render skills with current locale
+  if (window.skills) render(window.skills);
+  // Update stats
+  updateStats();
+}
+
+function updateLangSwitch() {
+  var btn = document.getElementById('langSwitch');
+  if (btn) btn.textContent = currentLocale === 'zh' ? 'EN' : '中';
+}
+
+function t(key) {
+  return (I18N[currentLocale] && I18N[currentLocale][key]) || key;
+}
+
+// Language switch handler
+document.getElementById('langSwitch').addEventListener('click', function() {
+  setLocale(currentLocale === 'zh' ? 'en' : 'zh');
+});
+
+// Detect and apply on load
+currentLocale = detectLocale();
+applyLocale();
+updateLangSwitch();
+
+// ===== Registry loading and rendering =====
+var REGISTRY_URL = 'https://cdn.jsdelivr.net/gh/AI4S-YB/fan-marketplace@main/index.json';
+
+// Tab switching
+document.querySelectorAll('.nav-tab').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    var tab = this.dataset.tab;
+    document.querySelectorAll('.nav-tab').forEach(function(b) { b.classList.remove('active'); });
+    this.classList.add('active');
+    document.querySelectorAll('.tab-content').forEach(function(t) { t.classList.remove('active'); });
+    var el = document.getElementById(tab);
+    if (el) el.classList.add('active');
+    var nav = document.getElementById('nav');
+    if (nav) nav.classList.remove('open');
+  });
+});
+
+// Mobile nav toggle
+var hamburger = document.getElementById('hamburger');
+if (hamburger) {
+  hamburger.addEventListener('click', function() {
+    var nav = document.getElementById('nav');
+    if (nav) nav.classList.toggle('open');
+  });
+}
+
+// Stats update
+function updateStats() {
+  var statsEl = document.getElementById('stats');
+  if (!statsEl || !window.skills) return;
+  var count = window.skills.length;
+  var template = t('stats.count');
+  statsEl.textContent = template.replace('{n}', count);
+}
+
+// Registry loading
+async function loadRegistry() {
+  try {
+    var resp = await fetch(REGISTRY_URL);
+    var data = await resp.json();
+    window.skills = data.skills || [];
+  } catch (e) {
+    window.skills = [];
+    var skillsEl = document.getElementById('skills');
+    if (skillsEl) {
+      skillsEl.innerHTML = '<div style="color:var(--muted);text-align:center;padding:40px">' + t('skills.loaderror') + '</div>';
     }
+  }
+  render(window.skills);
+  updateStats();
+}
 
-    // Registry loading
-    function load() {
-      return fetch(REGISTRY_URL)
-        .then(function(resp) { return resp.json(); })
-        .then(function(data) {
-          window.skills = data.skills || [];
-          render(window.skills);
-        })
-        .catch(function() {
-          window.skills = [];
-          var skillsEl = document.getElementById('skills');
-          if (skillsEl) {
-            skillsEl.innerHTML = '<div style="color:var(--muted);text-align:center;padding:40px">Failed to load registry. Check your connection and try again.</div>';
-          }
-          render(window.skills);
-        });
+function render(skills) {
+  var container = document.getElementById('skills');
+  if (!container) return;
+
+  if (skills.length === 0) {
+    container.innerHTML = '<div style="color:var(--muted);text-align:center;padding:40px">' + t('skills.empty') + '</div>';
+    return;
+  }
+
+  container.innerHTML = skills.map(function(s) {
+    var name = esc(s.display_name || s.id);
+    var version = esc(s.version || '?');
+    var desc = esc(s.description || '');
+    var category = s.category ? '<span class="skill-category">' + esc(s.category) + '</span>' : '';
+    var author = s.author ? 'by ' + esc(s.author) + ' &middot; ' : '';
+    var license = s.license ? esc(s.license) : '';
+    var meta = author || license ? '<div class="skill-meta">' + author + license + '</div>' : '';
+    var tags = '';
+    if (s.keywords && s.keywords.length) {
+      tags = '<div class="skill-tags">' + s.keywords.map(function(k) { return '<span class="skill-tag">' + esc(k) + '</span>'; }).join('') + '</div>';
     }
-
-    function render(skills) {
-      var statsEl = document.getElementById('stats');
-      var container = document.getElementById('skills');
-      if (!container) return;
-
-      if (statsEl) {
-        statsEl.textContent = skills.length + ' skill' + (skills.length !== 1 ? 's' : '') + ' available';
-      }
-
-      if (skills.length === 0) {
-        container.innerHTML = '<div style="color:var(--muted);text-align:center;padding:40px">No skills found.</div>';
-        return;
-      }
-
-      container.innerHTML = skills.map(function(s) {
-        var name = esc(s.display_name || s.id);
-        var version = esc(s.version || '?');
-        var desc = esc(s.description || '');
-        var author = s.author ? 'by ' + esc(s.author) + ' &middot; ' : '';
-        var license = s.license ? esc(s.license) : '';
-        var meta = author || license ? '<div style="color:var(--muted);font-size:12px;margin-bottom:6px">' + author + license + '</div>' : '';
-        var tags = '';
-        if (s.keywords && s.keywords.length) {
-          tags = '<div class="skill-tags">' + s.keywords.map(function(k) { return '<span class="skill-tag">' + esc(k) + '</span>'; }).join('') + '</div>';
-        }
-        var provides = s.provides && s.provides.length ? '<div style="color:var(--muted);font-size:12px">provides: ' + esc(s.provides.join(', ')) + '</div>' : '';
-        var requires = '';
-        if (s.requires && s.requires.length) {
-          requires = '<div style="color:var(--muted);font-size:12px">requires: ' + esc(s.requires.join(', ')) + '</div>';
-        }
-        var installId = esc(s.id);
-
-        return '<div class="skill-card">' +
-          '<div class="skill-name">' + name + ' <span style="color:var(--muted);font-size:12px;font-weight:normal">v' + version + '</span></div>' +
-          '<div class="skill-desc">' + desc + '</div>' +
-          meta +
-          tags +
-          provides +
-          requires +
-          '<div class="skill-install">fan install ' + installId + '</div>' +
-          '</div>';
-      }).join('');
-
-      // Click-to-copy on install commands
-      container.querySelectorAll('.skill-install').forEach(function(el) {
-        el.addEventListener('click', function() {
-          var text = this.textContent;
-          navigator.clipboard.writeText(text).then(function() {
-            var orig = el.textContent;
-            el.textContent = 'Copied!';
-            setTimeout(function() { el.textContent = orig; }, 1500);
-          }).catch(function() {});
-        });
-        el.style.cursor = 'pointer';
-        el.title = 'Click to copy';
-      });
+    var provides = '<div class="skill-meta">provides: ' + (s.provides || []).join(', ') || 'none' + '</div>';
+    var requires = '';
+    if (s.requires && s.requires.length) {
+      requires = '<div class="skill-meta">requires: ' + s.requires.join(', ') + '</div>';
     }
+    var installId = esc(s.id);
 
-    function esc(s) {
-      return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-    }
+    return '<div class="skill-card">' +
+      '<div class="skill-name">' + name + '</div>' +
+      '<div class="skill-desc">' + desc + '</div>' +
+      (tags || meta ? '<div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px">' + meta + tags + '</div>' : '') +
+      provides +
+      requires +
+      '<div class="skill-install">$ fan install ' + installId + '</div>' +
+      '</div>';
+  }).join('');
+}
 
-    // Search filtering
-    var searchInput = document.getElementById('search');
-    if (searchInput) {
-      searchInput.addEventListener('input', function(e) {
-        var q = e.target.value.toLowerCase().trim();
-        var filtered = q ? (window.skills || []).filter(function(s) {
-          return s.id.toLowerCase().indexOf(q) !== -1 ||
-            (s.display_name || '').toLowerCase().indexOf(q) !== -1 ||
-            (s.description || '').toLowerCase().indexOf(q) !== -1 ||
-            (s.keywords || []).some(function(k) { return k.toLowerCase().indexOf(q) !== -1; });
-        }) : (window.skills || []);
-        render(filtered);
-      });
-    }
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
 
-    load();
+// Search filtering
+var searchInput = document.getElementById('search');
+if (searchInput) {
+  searchInput.addEventListener('input', function(e) {
+    var q = e.target.value.toLowerCase().trim();
+    var filtered = q ? (window.skills || []).filter(function(s) {
+      return s.id.toLowerCase().indexOf(q) !== -1 ||
+        (s.display_name || '').toLowerCase().indexOf(q) !== -1 ||
+        (s.description || '').toLowerCase().indexOf(q) !== -1 ||
+        (s.keywords || []).some(function(k) { return k.toLowerCase().indexOf(q) !== -1; });
+    }) : (window.skills || []);
+    render(filtered);
+    updateStats();
+  });
+}
+
+loadRegistry();
   </script>
 
 </body>
