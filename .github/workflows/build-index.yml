@@ -1,0 +1,40 @@
+name: Build Index
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'registry-list.json'
+      - 'scripts/build-index.js'
+      - '.github/workflows/build-index.yml'
+  schedule:
+    - cron: '0 0 * * *'   # 每天 UTC 零点（北京时间早 8 点）
+  workflow_dispatch:        # 允许手动触发
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write        # 允许推送提交
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Build index.json
+        run: node scripts/build-index.js
+
+      - name: Commit and push if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add index.json
+          if git diff --cached --quiet; then
+            echo "No changes to index.json"
+          else
+            git commit -m "chore: auto-update index.json"
+            git push
+          fi
