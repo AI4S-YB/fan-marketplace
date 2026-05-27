@@ -167,55 +167,51 @@ $ fan invoke fan-skill consult-analysis <span class="cmt"># 调用某个能力</
   <!-- 贡献 Skill Tab -->
   <section class="tab-content" id="tab-contribute">
     <div class="section">
-      <h2>创建你自己的 Skill</h2>
-      <p>每个 Skill 是一个包含 <code>skill.yaml</code> 清单文件和 <code>SKILL.md</code> AI 上下文文件的 git 仓库。</p>
+      <h2>用 AI 创建你的 Skill</h2>
+      <p>用 Claude Code 本身来创建 Skill——将下面的提示词粘贴到 Claude Code 对话框，AI 会引导你完成全部步骤。</p>
+      <pre><span class="cmt"># 在 Claude Code 中执行（把 "..." 替换为你的 Skill 描述）：</span>
+帮我创建一个 FAN Marketplace Skill。
 
-      <h3>Step 1: 编写 skill.yaml</h3>
-      <p>清单文件声明 Skill 的标识、能力和依赖。</p>
-      <pre>name: <span class="str">my-skill</span>
+<span class="str">Skill 名称：...</span>
+<span class="str">用途描述：...</span>
+
+请完成以下步骤：
+1. 在当前目录创建 skill.yaml 和 SKILL.md
+2. skill.yaml 参考格式如下（根据我的描述修改 fields）：
+
+name: <span class="str">my-skill</span>
 version: <span class="str">0.1.0</span>
-display_name: <span class="str">"My Skill"</span>
-description: <span class="str">"What this skill does in one sentence"</span>
+display_name: <span class="str">"..."</span>
+description: <span class="str">"..." </span>
 author: <span class="str">your-github-handle</span>
 license: <span class="str">MIT</span>
-homepage: <span class="str">https://github.com/YOU/my-skill</span>
 runtime:
   type: <span class="str">skill</span>
   min_fan_version: <span class="str">"0.1.0"</span>
 provides:
-  - id: <span class="str">my-capability</span>
-    description: <span class="str">What this capability does</span>
-    run: <span class="str">echo hello</span>
-requires: []</pre>
-      <p>关键字段：<code>name</code> 和 <code>version</code> 必填。<code>provides</code> 列出 Skill 能做什么，每个 capability 可配置 <code>run</code> 命令供 CLI 调用。<code>requires</code> 列出此 Skill 依赖的能力。</p>
+  - id: <span class="str">...</span>
+    description: <span class="str">...</span>
+requires: []
 
-      <h3>Step 2: 编写 SKILL.md</h3>
-      <p>SKILL.md 是加载到 AI agent 上下文的指令文件。编写清晰、直接的指令给 AI。</p>
-      <pre>---
-name: <span class="str">my-skill</span>
-description: <span class="str">What this skill does for AI agents</span>
----
+3. SKILL.md 包含 YAML frontmatter（name + description）和 AI 指令正文
+4. 初始化 git 仓库并提交
+5. 把仓库推送到 GitHub
 
-<span class="cmt">## How You Work</span>
-You are an AI assistant specialized in [domain]. When the user asks about [topic]:
+创建完成后，告诉我接下来如何注册到 FAN Marketplace。</pre>
+      <p>把上面的提示词整段复制到 Claude Code，AI 会逐步创建完整的 Skill 仓库。你只需要提供一个 Skill 名称和一句话描述。</p>
+    </div>
 
-1. First, [step one]
-2. Then, [step two]
-3. Finally, [step three]
-
-<span class="cmt">## Constraints</span>
-- Always [rule]
-- Never [rule]</pre>
-      <p>YAML frontmatter（<code>---</code> 标记之间）是 Claude Code 必需的。正文为自由 Markdown 格式。</p>
-
-      <h3>Step 3: 文件结构</h3>
+    <div class="section">
+      <h2>手动编写（参考）</h2>
+      <p>如果你想手动创建，下面是需要的最小文件结构：</p>
       <pre>my-skill/
-├── skill.yaml         <span class="cmt">// Marketplace 清单文件</span>
-├── SKILL.md           <span class="cmt">// AI agent 上下文</span>
-└── <span class="cmt">// 其他文件 — 脚本、参考文档、数据</span></pre>
+├── skill.yaml         <span class="cmt"># Marketplace 清单文件</span>
+└── SKILL.md           <span class="cmt"># AI agent 上下文</span></pre>
+    </div>
 
-      <h3>Step 4: 注册到 FAN Marketplace</h3>
-      <p>Fork <a href="https://github.com/AI4S-YB/fan-marketplace" target="_blank">fan-marketplace</a>，在 <code>index.json</code> 中添加你的 Skill 条目，提交 PR：</p>
+    <div class="section">
+      <h2>注册到 FAN Marketplace</h2>
+      <p>Skill 创建并推送到 GitHub 后，Fork <a href="https://github.com/AI4S-YB/fan-marketplace" target="_blank">fan-marketplace</a>，在 <code>index.json</code> 的 <code>skills</code> 数组中添加你的条目：</p>
       <pre>{
   <span class="str">"id"</span>: <span class="str">"my-skill"</span>,
   <span class="str">"display_name"</span>: <span class="str">"My Skill"</span>,
@@ -233,7 +229,7 @@ You are an AI assistant specialized in [domain]. When the user asks about [topic
   <span class="str">"keywords"</span>: [<span class="str">"your-keywords"</span>],
   <span class="str">"category"</span>: <span class="str">"community"</span>
 }</pre>
-      <p>合并后，所有人都可以通过 <code>fan install my-skill</code> 安装你的 Skill。</p>
+      <p>提交 Pull Request。合并后，你的 Skill 即可通过 <code>fan install my-skill</code> 被所有人发现和使用。</p>
     </div>
   </section>
 
