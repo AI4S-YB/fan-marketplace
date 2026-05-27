@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FAN Marketplace — Future Agriculture Nexus</title>
+<title>FAN Marketplace</title>
 <style>
   /* ===== Reset ===== */
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -325,8 +325,7 @@
   <!-- ===== Header ===== -->
   <header class="header">
     <div class="header-brand">
-      <span class="header-logo">FAN</span>
-      <span class="header-tagline">Future Agriculture Nexus</span>
+      <span class="header-logo">FAN Marketplace</span>
     </div>
 
     <button class="hamburger" id="hamburger" aria-label="Toggle navigation">&#9776;</button>
@@ -345,8 +344,8 @@
     <!-- Marketplace Tab -->
     <section class="tab-content active" id="tab-marketplace">
       <div class="hero">
-        <h1>AI Skills for Agricultural Bioinformatics</h1>
-        <p>Discover and install modular AI coding agent skills for plant genomics, breeding analytics, and bioinformatics research. Powered by the FAN ecosystem.</p>
+        <h1>AI Skills for 农业科学与生物育种</h1>
+        <p>从生物问题到分析结果 — 发现并安装模块化 AI 技能。覆盖植物基因组学、育种分析、生物信息学研究。由 FAN 生态驱动。</p>
         <div class="hero-install">$ npm install -g fan-cli</div>
       </div>
 
@@ -451,40 +450,87 @@
     <!-- Guide Tab -->
     <section class="tab-content" id="tab-guide">
       <div class="section">
-        <h2>1. Install Claude Code</h2>
-        <p>Claude Code is the AI coding agent that runs skills. Requires Node.js 18+.</p>
+        <h2>1. 安装 Claude Code</h2>
+        <p>Claude Code 是运行 AI Skill 的编程 agent 环境。需要 Node.js 18+。我们提供了一键安装脚本：</p>
+
+        <h3>macOS / Linux</h3>
+        <pre>$ <span class="kw">curl -fsSL</span> https://raw.githubusercontent.com/AI4S-YB/fan-marketplace/main/install_claude_code.sh | <span class="kw">bash</span></pre>
+        <p>该脚本会自动检测网络环境（国内/国外），选择最快的镜像源安装 nvm、Node.js 和 Claude Code CLI。</p>
+        <p>或手动安装：</p>
         <pre>$ <span class="kw">npm install -g</span> @anthropic-ai/claude-code
 $ claude --version</pre>
-        <p>See the <a href="https://docs.anthropic.com/en/docs/claude-code/overview" target="_blank">Claude Code documentation</a> for detailed setup instructions.</p>
+
+        <h3>Windows</h3>
+        <p>Windows 用户推荐安装 <strong>WSL2</strong>（Windows Subsystem for Linux），在 Linux 子系统中运行 Claude Code：</p>
+        <pre><span class="cmt"># 以管理员身份打开 PowerShell，执行：</span>
+$ <span class="kw">wsl --install</span>
+<span class="cmt"># 重启后进入 Ubuntu 终端，然后按上方 macOS/Linux 步骤操作</span></pre>
+        <p>WSL2 安装指南：<a href="https://learn.microsoft.com/en-us/windows/wsl/install" target="_blank">Microsoft WSL 官方文档</a></p>
+
+        <p>安装完成后，终端输入 <code>claude</code> 启动 Claude Code。首次使用需要 Anthropic API Key 或登录 Claude 账号。</p>
       </div>
 
       <div class="section">
-        <h2>2. Configure Settings</h2>
-        <p>Claude Code reads <code>~/.claude/settings.json</code> for plugin and skill configuration. Create this file if it doesn't exist:</p>
+        <h2>2. 配置 Settings — 接入第三方模型</h2>
+        <p>Claude Code 默认使用 Anthropic 官方模型。如果你需要接入 DeepSeek、GLM 等第三方模型以降低成本或满足合规要求，编辑 <code>~/.claude/settings.json</code>：</p>
+
+        <h3>接入 DeepSeek 模型</h3>
         <pre>{
-  <span class="str">"enabledPlugins"</span>: {}
+  <span class="str">"model"</span>: <span class="str">"deepseek/deepseek-chat"</span>,
+  <span class="str">"apiKey"</span>: <span class="str">"sk-your-deepseek-api-key"</span>,
+  <span class="str">"baseURL"</span>: <span class="str">"https://api.deepseek.com/v1"</span>
 }</pre>
-        <p>Skills installed via <code>fan install</code> are automatically synced to <code>~/.claude/skills/</code> as symlinks. Claude Code discovers them automatically — no extra configuration needed.</p>
+        <p>DeepSeek 是国内可用、性价比高的大模型。获取 API Key：<a href="https://platform.deepseek.com" target="_blank">platform.deepseek.com</a></p>
+
+        <h3>接入智谱 GLM 模型</h3>
+        <pre>{
+  <span class="str">"model"</span>: <span class="str">"zhipuai/glm-4"</span>,
+  <span class="str">"apiKey"</span>: <span class="str">"your-zhipu-api-key"</span>,
+  <span class="str">"baseURL"</span>: <span class="str">"https://open.bigmodel.cn/api/paas/v4"</span>
+}</pre>
+        <p>智谱 GLM-4 是国内合规场景的首选。获取 API Key：<a href="https://open.bigmodel.cn" target="_blank">open.bigmodel.cn</a></p>
+
+        <h3>启用 Fan Skill</h3>
+        <pre>{
+  <span class="str">"enabledPlugins"</span>: {},
+  <span class="str">"extraKnownMarketplaces"</span>: {
+    <span class="str">"fan-marketplace"</span>: {
+      <span class="str">"source"</span>: {
+        <span class="str">"source"</span>: <span class="str">"github"</span>,
+        <span class="str">"repo"</span>: <span class="str">"AI4S-YB/fan-marketplace"</span>
+      }
+    }
+  }
+}</pre>
       </div>
 
       <div class="section">
-        <h2>3. Install fan-cli</h2>
-        <p>The <code>fan</code> command searches, installs, and manages skills from the FAN Marketplace.</p>
+        <h2>3. 安装 fan-cli</h2>
+        <p><code>fan</code> 命令行工具用于搜索、安装和管理 FAN Marketplace 上的 Skill。</p>
         <pre>$ <span class="kw">npm install -g</span> fan-cli
 $ fan --help</pre>
-        <p>fan-cli is the bridge between the marketplace registry and your local AI coding environment.</p>
+        <p>fan-cli 负责连接 marketplace registry 与本地 AI 编程环境。安装的 Skill 自动同步到 Claude Code。</p>
       </div>
 
       <div class="section">
-        <h2>4. Discover &amp; Install Skills</h2>
-        <pre>$ fan search <span class="str">"plant"</span>               <span class="cmt">// Search for skills</span>
-$ fan info fan-skill              <span class="cmt">// View skill details</span>
-$ fan install fan-skill           <span class="cmt">// Install a skill</span>
-$ fan list                        <span class="cmt">// List installed skills</span>
-$ fan capabilities                <span class="cmt">// Show all available capabilities</span>
-$ fan which consult-analysis      <span class="cmt">// Find what skill provides a capability</span>
-$ fan invoke fan-skill consult-analysis  <span class="cmt">// Invoke a capability</span></pre>
-        <p>After installation, restart Claude Code (or start a new conversation). The skill appears in the available skills list automatically.</p>
+        <h2>4. 发现与安装 Skill</h2>
+        <pre>$ fan search <span class="str">"plant"</span>               <span class="cmt">// 搜索 Skill</span>
+$ fan info fan-skill              <span class="cmt">// 查看 Skill 详情</span>
+$ fan install fan-skill           <span class="cmt">// 安装 Skill</span>
+$ fan list                        <span class="cmt">// 列出已安装的 Skill</span>
+$ fan capabilities                <span class="cmt">// 显示所有可用能力</span>
+$ fan which consult-analysis      <span class="cmt">// 查找能力提供者</span>
+$ fan invoke fan-skill consult-analysis  <span class="cmt">// 调用某个能力</span></pre>
+        <p>安装后重启 Claude Code（或开启新对话），Skill 会自动出现在可用技能列表中。</p>
+      </div>
+
+      <div class="section">
+        <h2>5. 以 Claude Code 插件方式安装（非官方）</h2>
+        <p>如果已在使用 Claude Code，可直接通过插件市场注册 FAN：</p>
+        <pre>$ <span class="cmt">// 在 Claude Code 对话中执行：</span>
+/plugin marketplace add <span class="str">AI4S-YB/fan-marketplace</span>
+/plugin install <span class="str">fan-skill@fan-marketplace</span></pre>
+        <p>此方式安装的 Skill 同样由 fan-cli 管理依赖同步。两种安装方式互通，<code>fan list</code> 均可见。</p>
       </div>
     </section>
 
@@ -564,24 +610,24 @@ You are an AI assistant specialized in [domain]. When the user asks about [topic
     <!-- About Tab -->
     <section class="tab-content" id="tab-about">
       <div class="section">
-        <h2>FAN = Future Agriculture Nexus</h2>
-        <p>FAN is an open ecosystem of AI skills for agricultural bioinformatics and breeding data analysis. Our mission is to make computational biology accessible to every researcher — through AI-powered tools that bridge the gap between biological questions and computational answers.</p>
-        <p>The flagship <strong>fan-skill</strong> engine covers 29 analysis domains — from GWAS and genomic selection to transcriptomics and phylogenetics. Each domain combines expert knowledge (C-layer decision rules) with AI reasoning (B-layer intelligence) to guide researchers from question to publication-ready results.</p>
+        <h2>关于 FAN</h2>
+        <p>FAN 是一个面向农业科学与生物育种的 AI 技能开放生态。我们的目标是通过 AI 工具连接生物学问题与计算分析，让每一位研究者都能获得专业的生物信息学支持。</p>
+        <p>旗舰项目 <strong>fan-skill</strong> 覆盖 29 个分析领域 —— 从 GWAS、基因组选择到转录组学、系统发育。每个领域结合专家知识（C 层决策规则）与 AI 推理（B 层智能），引导研究者从科学问题到可发表的结果。</p>
       </div>
 
       <div class="section">
-        <h2>How It Works</h2>
-        <p>Skills are AI agent plugins. Each skill extends Claude Code with domain-specific knowledge, analysis pipelines, and tool integrations. Install a skill, start a conversation, and the AI gains that domain's expertise.</p>
-        <p>Skills can <strong>call each other</strong> at runtime. fan-skill handles analysis planning — when it needs NCBI data, it discovers and invokes the ncbi-downloader skill. The ecosystem grows with each new skill, each building on the capabilities of others.</p>
+        <h2>运行机制</h2>
+        <p>Skill 是 AI agent 插件。安装后，Claude Code 获得该领域的专业知识、分析流程和工具集成。开启对话，AI 即刻具备领域专长。</p>
+        <p>Skill 之间可以<strong>互相调用</strong>。fan-skill 负责分析规划，当需要 NCBI 数据时，自动发现并调用 ncbi-downloader skill。生态随每个新 skill 不断成长。</p>
       </div>
 
       <div class="section">
-        <h2>Links</h2>
+        <h2>链接</h2>
         <p>
-          <a href="https://github.com/AI4S-YB/fan-marketplace" target="_blank">fan-marketplace</a> — Registry, CLI, and this website<br>
-          <a href="https://github.com/AI4S-YB/fan-skill" target="_blank">fan-skill</a> — Plant Bioinformatics Engine (29 analysis domains)<br>
+          <a href="https://github.com/AI4S-YB/fan-marketplace" target="_blank">fan-marketplace</a> — Registry、CLI、本页面<br>
+          <a href="https://github.com/AI4S-YB/fan-skill" target="_blank">fan-skill</a> — Plant Bioinformatics Engine（29 个分析领域）<br>
         </p>
-        <p style="margin-top:16px">Built with the <a href="https://github.com/AI4S-YB/fan-marketplace" target="_blank">fan-cli</a> toolkit. MIT License.</p>
+        <p style="margin-top:16px">基于 <a href="https://github.com/AI4S-YB/fan-marketplace" target="_blank">fan-cli</a> 工具构建。MIT License。</p>
       </div>
     </section>
 
@@ -589,7 +635,7 @@ You are an AI assistant specialized in [domain]. When the user asks about [topic
 
   <!-- ===== Footer ===== -->
   <footer class="footer">
-    <span>FAN Marketplace &mdash; Future Agriculture Nexus</span>
+    <span>FAN Marketplace</span>
     <span> &middot; </span>
     <a href="https://github.com/AI4S-YB/fan-marketplace">GitHub</a>
   </footer>
