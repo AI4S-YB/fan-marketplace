@@ -33,6 +33,7 @@
       <h1>AI Skills for 农业科学与生物育种</h1>
       <p>从生物问题到分析结果 — 发现并安装模块化 AI 技能。覆盖植物基因组学、育种分析、生物信息学研究。由 FAN 生态驱动。</p>
       <div class="hero-install">$ npm install -g fan-marketplace</div>
+      <p style="font-size:0.75rem;color:var(--muted);margin-top:8px">或：npm install -g https://github.com/AI4S-YB/fan-marketplace.git</p>
     </div>
 
     <div class="search-wrap">
@@ -135,8 +136,11 @@ $ <span class="kw">touch</span> ~/.claude/settings.json</pre>
 
     <div class="section">
       <h2>3. 安装 fan-cli</h2>
-      <p><code>fan</code> 是 FAN Marketplace 的命令行工具，用于搜索、安装和管理 Skill。fan-cli 尚未发布到 npm registry，当前通过 git 安装：</p>
-      <pre>$ <span class="kw">npm install -g</span> fan-marketplace
+      <p><code>fan</code> 是 FAN Marketplace 的命令行工具。两种安装方式任选：</p>
+      <pre><span class="cmt"># 方式一：npm registry（推荐）</span>
+$ <span class="kw">npm install -g</span> fan-marketplace
+<span class="cmt"># 方式二：GitHub 直接安装（npm 不可用时备选）</span>
+$ <span class="kw">npm install -g</span> https://github.com/AI4S-YB/fan-marketplace.git
 $ <span class="kw">fan --help</span></pre>
       <p>安装完成后，用 <code>fan install</code> 安装的 Skill 会自动以软链接同步到 <code>~/.claude/skills/</code>，Claude Code 自动发现，无需额外配置。</p>
     </div>
