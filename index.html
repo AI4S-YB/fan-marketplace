@@ -52,8 +52,12 @@
       <h2>1. 安装 Claude Code</h2>
       <p>Claude Code 是运行 AI Skill 的编程 agent 环境。需要 Node.js 18+。我们提供了一键安装脚本：</p>
 
-      <h3>macOS / Linux</h3>
+      <h3>macOS / Linux · 国内用户</h3>
+      <pre>$ <span class="kw">curl -fsSL</span> https://cdn.jsdelivr.net/gh/AI4S-YB/fan-marketplace@main/install_claude_code.sh | <span class="kw">bash</span></pre>
+
+      <h3>macOS / Linux · International</h3>
       <pre>$ <span class="kw">curl -fsSL</span> https://raw.githubusercontent.com/AI4S-YB/fan-marketplace/main/install_claude_code.sh | <span class="kw">bash</span></pre>
+
       <p>该脚本会自动检测网络环境（国内/国外），选择最快的镜像源安装 nvm、Node.js 和 Claude Code CLI。</p>
       <p>或手动安装：</p>
       <pre>$ <span class="kw">npm install -g</span> @anthropic-ai/claude-code
