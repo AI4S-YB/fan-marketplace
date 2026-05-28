@@ -136,12 +136,28 @@ $ <span class="kw">touch</span> ~/.claude/settings.json</pre>
 
     <div class="section">
       <h2>3. 安装 fan-cli</h2>
-      <p><code>fan</code> 是 FAN Marketplace 的命令行工具。两种安装方式任选：</p>
+      <p>安装前，确认 nvm 已正确加载：</p>
+      <pre>$ <span class="kw">nvm --version</span>
+<span class="cmt"># 正常输出：0.40.3（或类似版本号）</span>
+<span class="cmt"># 如提示 command not found，说明 nvm 未安装或未加载</span></pre>
+
+      <p><strong>未安装 nvm</strong>，请回到 <a href="#" onclick="document.querySelector('[data-tab=tab-guide]').click(); setTimeout(()=>document.querySelector('#tab-guide').scrollIntoView(),100); return false;">第 1 步</a> 用一键脚本安装。</p>
+
+      <p><strong>已安装但未加载</strong>（安装后还没新开终端），执行：</p>
+      <pre>$ <span class="kw">source</span> ~/.zshrc          <span class="cmt"># macOS 默认</span>
+$ <span class="kw">source</span> ~/.bashrc         <span class="cmt"># Linux 默认</span></pre>
+      <p>确认 <code>nvm --version</code> 有输出后，继续安装：</p>
       <pre><span class="cmt"># 方式一：npm registry（推荐）</span>
 $ <span class="kw">npm install -g</span> fan-marketplace
 <span class="cmt"># 方式二：GitHub 直接安装（npm 不可用时备选）</span>
 $ <span class="kw">npm install -g</span> https://github.com/AI4S-YB/fan-marketplace.git
 $ <span class="kw">fan --help</span></pre>
+
+      <p><strong>未用 nvm</strong>（系统包管理器安装的 Node.js）：全局安装需要 sudo。建议先配 npm prefix 避免权限问题：</p>
+      <pre>$ <span class="kw">mkdir -p</span> ~/.npm-global
+$ <span class="kw">npm config set</span> prefix ~/.npm-global
+$ <span class="kw">echo</span> 'export PATH="$HOME/.npm-global/bin:$PATH"' >> ~/.zshrc
+$ <span class="kw">source</span> ~/.zshrc</pre>
       <p>安装完成后，用 <code>fan install</code> 安装的 Skill 会自动以软链接同步到 <code>~/.claude/skills/</code>，Claude Code 自动发现，无需额外配置。</p>
     </div>
 
