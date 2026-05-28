@@ -128,6 +128,30 @@ else
         info "从 Gitee 镜像克隆 nvm..."
         git clone --depth 1 -b "$NVM_VERSION" "$NVM_GITEE" "$NVM_DIR" 2>/dev/null
         info "nvm 克隆完成: $NVM_DIR"
+
+        # Gitee clone 不会自动配置 rc 文件，手动追加 nvm 初始化代码
+        configure_nvm_rc() {
+            local rc="$1"
+            local marker="# nvm-init (added by install_claude_code.sh)"
+
+            [ ! -f "$rc" ] && touch "$rc"
+            if grep -qF "$marker" "$rc" 2>/dev/null; then
+                return
+            fi
+
+            cat <<'NVM_BLOCK' >> "$rc"
+
+# nvm-init (added by install_claude_code.sh)
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+NVM_BLOCK
+            info "已配置 nvm 初始化: $rc"
+        }
+
+        for rc in "$HOME/.bashrc" "$HOME/.zshrc" "$HOME/.bash_profile"; do
+            configure_nvm_rc "$rc"
+        done
     fi
 fi
 
