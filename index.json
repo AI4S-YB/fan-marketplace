@@ -2,13 +2,13 @@
   "registry": {
     "name": "fan-marketplace",
     "version": "1.0.0",
-    "updated": "2026-05-29T01:22:12.857Z"
+    "updated": "2026-05-29T01:35:12.354Z"
   },
   "skills": [
     {
       "id": "fan-skill",
       "display_name": "Fan-Skill: Plant Bioinformatics Engine",
-      "description": ">",
+      "description": "AI-powered plant bioinformatics and breeding analysis engine. From biological question to publication-ready results — consultation, analysis, interpretation, and visualization. Knowledge-base driven with B+C dual-mode decision architecture.",
       "author": "AI4S-YB",
       "version": "2.3.0",
       "license": "MIT",
@@ -39,7 +39,7 @@
     {
       "id": "fan-files",
       "display_name": "Fan-Files 数据检索",
-      "description": "服务器文件元数据检索引擎——扫描、推断、检索生物信息学数据，让 AI 助手拥有���服务器数据视野",
+      "description": "服务器文件元数据检索引擎——扫描、推断、检索生物信息学数据，让 AI 助手拥有全���务器数据视野",
       "author": "AI4S-YB",
       "version": "0.1.0",
       "license": "MIT",

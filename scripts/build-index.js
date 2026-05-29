@@ -28,6 +28,17 @@ function parseSimpleYaml(content) {
         result[currentKey] = result[currentKey] || [];
         currentArray = result[currentKey];
         currentArrayItem = null;
+      } else if (val === '>' || val === '|') {
+        // YAML multi-line scalar — collect subsequent indented lines
+        result[currentKey] = '';
+        currentArray = null;
+        currentArrayItem = null;
+        // The value is in the collected continuation block below
+      } else if (val === '>-' || val === '|-' || val === '>+' || val === '|+') {
+        // YAML block chomping variants
+        result[currentKey] = '';
+        currentArray = null;
+        currentArrayItem = null;
       } else {
         const unquoted = val.replace(/^["'](.+)["']$/, '$1');
         result[currentKey] = unquoted;
@@ -35,6 +46,16 @@ function parseSimpleYaml(content) {
         currentArrayItem = null;
       }
       continue;
+    }
+
+    // Continuation line for multi-line scalar (the value is being collected in currentKey)
+    // Lines indented with 2+ spaces that follow a > or | scalar indicator
+    if (currentKey && !currentArray && typeof result[currentKey] === 'string' && line.match(/^\s{2,}(\S.*)$/)) {
+      const contMatch = line.match(/^\s{2,}(\S.*)$/);
+      if (contMatch) {
+        result[currentKey] += (result[currentKey] ? ' ' : '') + contMatch[1].trim();
+        continue;
+      }
     }
 
     const arrayItemMatch = line.match(/^\s+-\s+(\w[\w-]*):\s*(.*)$/);
