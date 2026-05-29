@@ -168,7 +168,7 @@ a:hover { text-decoration: underline; }
 .skill-card {
   border: 1px solid var(--border);
   padding: 18px 20px;
-  background: var(--bg);
+  background: var(--surface);
 }
 
 .skill-name {
