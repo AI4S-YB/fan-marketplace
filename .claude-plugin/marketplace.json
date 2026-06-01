@@ -1,0 +1,26 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "fan-marketplace",
+  "description": "AI Skill registry for agricultural bioinformatics - discover, install, and share modular AI coding agent skills for plant breeding and genomics analysis",
+  "owner": {
+    "name": "AI4S-YB",
+    "email": "ai4s.yb@gmail.com"
+  },
+  "plugins": [
+    {
+      "name": "fan-skill",
+      "description": "AI-powered plant bioinformatics and breeding analysis engine. From biological question to publication-ready results - consultation, analysis, interpretation, and visualization. Knowledge-base driven with B+C dual-mode decision architecture for genomics, transcriptomics, phylogeny, GWAS, and genomic selection.",
+      "author": {
+        "name": "AI4S-YB"
+      },
+      "category": "development",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/AI4S-YB/fan-skill.git",
+        "sha": "a9fa27cd8e112f6e75c35afa4d60fa32260a701b"
+      },
+      "tags": ["community-managed"],
+      "homepage": "https://github.com/AI4S-YB/fan-skill"
+    }
+  ]
+}
