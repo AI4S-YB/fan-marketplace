@@ -1,5 +1,4 @@
 {
-  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "fan-marketplace",
   "description": "AI Skill registry for agricultural bioinformatics - discover, install, and share modular AI coding agent skills for plant breeding and genomics analysis",
   "owner": {
