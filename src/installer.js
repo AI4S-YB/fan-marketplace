@@ -51,10 +51,11 @@ function installSkill(home, skillInfo) {
       // Sync to Claude Code
       syncToClaudeCode(home, skillInfo.id);
     } catch (e) {
-      // Clean up failed clone
+      // Clean up failed clone (both directory and metadata)
       if (fs.existsSync(skillDir)) {
         fs.rmSync(skillDir, { recursive: true, force: true });
       }
+      removeInstalledSkill(home, skillInfo.id);
       resolve({ success: false, error: e.stderr ? e.stderr.toString() : e.message });
     }
   });
