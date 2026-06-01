@@ -149,6 +149,8 @@ function run(argv) {
                     console.log(`  Installed: ${dep.skillId} v${depSkill.version}`);
                   } else {
                     console.error(`  Failed to install dependency ${dep.skillId}: ${result.error}`);
+                    console.error(`Aborting installation: required dependency '${dep.capabilityId}' could not be installed.`);
+                    process.exit(1);
                   }
                 }
               }
