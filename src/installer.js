@@ -8,7 +8,8 @@ function installSkill(home, skillInfo) {
   return new Promise((resolve) => {
     const skillDir = path.join(fanDir(home), 'skills', skillInfo.id);
 
-    // Clean up any previous partial install
+    // Clean up any previous partial install (both directory and metadata)
+    removeInstalledSkill(home, skillInfo.id);
     if (fs.existsSync(skillDir)) {
       fs.rmSync(skillDir, { recursive: true, force: true });
     }
