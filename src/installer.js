@@ -48,8 +48,11 @@ function installSkill(home, skillInfo) {
 
       resolve({ success: true, dir: skillDir });
 
-      // Sync to Claude Code
-      syncToClaudeCode(home, skillInfo.id);
+      // Sync to Claude Code (best-effort, after install succeeds)
+      const syncResult = syncToClaudeCode(home, skillInfo.id);
+      if (!syncResult.synced && syncResult.reason) {
+        console.log(`Note: Skill installed but not synced to Claude Code: ${syncResult.reason}`);
+      }
     } catch (e) {
       // Clean up failed clone (both directory and metadata)
       if (fs.existsSync(skillDir)) {
@@ -108,8 +111,11 @@ function updateSkill(home, skillId) {
     // Refresh metadata from updated skill.yaml
     const versionInfo = refreshInstalledMetadata(home, skillId);
 
-    // Re-sync to Claude Code
-    syncToClaudeCode(home, skillId);
+    // Re-sync to Claude Code (best-effort)
+    const syncResult = syncToClaudeCode(home, skillId);
+    if (!syncResult.synced && syncResult.reason) {
+      console.log(`Note: Skill updated but not synced to Claude Code: ${syncResult.reason}`);
+    }
 
     return {
       success: true,
@@ -129,7 +135,7 @@ function syncToClaudeCode(home, skillId) {
 
   // If Claude Code is not installed, skip silently
   if (!fs.existsSync(path.join(homeDir, '.claude'))) {
-    return;
+    return { synced: false, reason: 'Claude Code not detected' };
   }
 
   try {
@@ -139,16 +145,15 @@ function syncToClaudeCode(home, skillId) {
     if (fs.existsSync(linkPath)) {
       const stat = fs.lstatSync(linkPath);
       if (!stat.isSymbolicLink()) {
-        console.log(`Warning: ~/.claude/skills/${skillId} already exists (not a symlink), skipping sync.`);
-        return;
+        return { synced: false, reason: `~/.claude/skills/${skillId} already exists as a directory (not a symlink)` };
       }
       fs.rmSync(linkPath);
     }
 
     fs.symlinkSync(fanSkillDir, linkPath);
+    return { synced: true };
   } catch (e) {
-    // Sync is best-effort; don't fail install if it doesn't work
-    console.log(`Note: Could not sync to Claude Code: ${e.message}`);
+    return { synced: false, reason: e.message };
   }
 }
 
