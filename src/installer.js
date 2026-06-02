@@ -8,16 +8,36 @@ function installSkill(home, skillInfo) {
   return new Promise((resolve) => {
     const skillDir = path.join(fanDir(home), 'skills', skillInfo.id);
 
-    // Clean up any previous partial install (both directory and metadata)
-    removeInstalledSkill(home, skillInfo.id);
-    if (fs.existsSync(skillDir)) {
-      fs.rmSync(skillDir, { recursive: true, force: true });
+    const dist = skillInfo.distribution;
+    if (!dist || dist.type !== 'git') {
+      resolve({ success: false, error: `Unsupported distribution type: ${dist ? dist.type : 'unknown'}` });
+      return;
     }
 
-    const dist = skillInfo.distribution;
-    if (dist.type !== 'git') {
-      resolve({ success: false, error: `Unsupported distribution type: ${dist.type}` });
+    // Pre-flight: check git is available
+    try {
+      execSync('git --version', { stdio: 'pipe', timeout: 5000 });
+    } catch (e) {
+      resolve({ success: false, error: 'Git is not available. Please install git and try again.' });
       return;
+    }
+
+    // If a directory already exists from a previous (possibly broken) install,
+    // remove it now. The caller should have already verified this is a fresh install.
+    if (fs.existsSync(skillDir)) {
+      try {
+        fs.rmSync(skillDir, { recursive: true, force: true });
+      } catch (e) {
+        resolve({ success: false, error: `Cannot remove existing directory at ${skillDir}: ${e.message}` });
+        return;
+      }
+    }
+
+    // Remove any stale metadata record (best-effort)
+    try {
+      removeInstalledSkill(home, skillInfo.id);
+    } catch (e) {
+      // Ignore — metadata may not exist
     }
 
     try {
@@ -29,8 +49,15 @@ function installSkill(home, skillInfo) {
 
       execSync('git ' + args.join(' '), {
         stdio: 'pipe',
-        timeout: 30000
+        timeout: 60000,
+        env: { ...process.env, GIT_TERMINAL_PROMPT: '0', GIT_ASKPASS: '' }
       });
+
+      // Verify the clone produced something usable
+      if (!fs.existsSync(skillDir) || fs.readdirSync(skillDir).length === 0) {
+        resolve({ success: false, error: `Clone completed but directory is empty: ${skillDir}` });
+        return;
+      }
 
       // Verify skill.yaml exists (optional, for info)
       const yamlPath = path.join(skillDir, 'skill.yaml');
@@ -54,12 +81,29 @@ function installSkill(home, skillInfo) {
         console.log(`Note: Skill installed but not synced to Claude Code: ${syncResult.reason}`);
       }
     } catch (e) {
-      // Clean up failed clone (both directory and metadata)
+      // Clean up failed clone
       if (fs.existsSync(skillDir)) {
-        fs.rmSync(skillDir, { recursive: true, force: true });
+        try { fs.rmSync(skillDir, { recursive: true, force: true }); } catch (_) {}
       }
-      removeInstalledSkill(home, skillInfo.id);
-      resolve({ success: false, error: e.stderr ? e.stderr.toString() : e.message });
+      try { removeInstalledSkill(home, skillInfo.id); } catch (_) {}
+
+      // Provide actionable error messages based on failure type
+      const stderr = e.stderr ? e.stderr.toString().trim() : '';
+      let errorMsg;
+      if (e.code === 'ETIMEDOUT' || stderr.includes('timeout') || stderr.includes('timed out')) {
+        errorMsg = `Git clone timed out after 60s. Check your network connection to ${dist.url}.`;
+      } else if (stderr.includes('Could not resolve host') || stderr.includes('unable to access') || stderr.includes('Failed to connect')) {
+        errorMsg = `Network error: cannot reach ${dist.url}. Check your internet connection.`;
+      } else if (stderr.includes('Permission denied') || stderr.includes('could not read')) {
+        errorMsg = `Permission denied cloning from ${dist.url}. The repository may be private or require authentication.`;
+      } else if (stderr.includes('not found') || stderr.includes('does not exist') || stderr.includes('repository not found')) {
+        errorMsg = `Repository not found at ${dist.url}. The skill source may have moved or been deleted.`;
+      } else if (stderr) {
+        errorMsg = `Git clone failed: ${stderr}`;
+      } else {
+        errorMsg = `Installation failed: ${e.message || 'unknown error'}`;
+      }
+      resolve({ success: false, error: errorMsg });
     }
   });
 }
@@ -103,10 +147,15 @@ function refreshInstalledMetadata(home, skillId) {
 function updateSkill(home, skillId) {
   const skillDir = path.join(fanDir(home), 'skills', skillId);
   if (!fs.existsSync(skillDir)) {
-    return { success: false, error: `Skill '${skillId}' is not installed` };
+    return { success: false, error: `Skill '${skillId}' is not installed. Run \`fan install ${skillId}\` first.` };
   }
   try {
-    execSync('git pull --ff-only', { cwd: skillDir, stdio: 'pipe', timeout: 30000 });
+    execSync('git pull --ff-only', {
+      cwd: skillDir,
+      stdio: 'pipe',
+      timeout: 60000,
+      env: { ...process.env, GIT_TERMINAL_PROMPT: '0', GIT_ASKPASS: '' }
+    });
 
     // Refresh metadata from updated skill.yaml
     const versionInfo = refreshInstalledMetadata(home, skillId);
@@ -123,7 +172,18 @@ function updateSkill(home, skillId) {
       version: versionInfo.newVersion
     };
   } catch (e) {
-    return { success: false, error: e.stderr ? e.stderr.toString() : e.message };
+    const stderr = e.stderr ? e.stderr.toString().trim() : '';
+    let errorMsg;
+    if (e.code === 'ETIMEDOUT' || stderr.includes('timed out')) {
+      errorMsg = `Git pull timed out. Check your network connection.`;
+    } else if (stderr.includes('Could not resolve host') || stderr.includes('unable to access')) {
+      errorMsg = `Network error: cannot reach remote. Check your internet connection.`;
+    } else if (stderr) {
+      errorMsg = `Git pull failed: ${stderr}`;
+    } else {
+      errorMsg = `Update failed: ${e.message || 'unknown error'}`;
+    }
+    return { success: false, error: errorMsg };
   }
 }
 

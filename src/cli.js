@@ -1,8 +1,9 @@
 'use strict';
 const { Command } = require('commander');
 const path = require('node:path');
+const fs = require('node:fs');
 const os = require('node:os');
-const { loadInstalled, saveInstalled, loadRegistries, saveRegistries, ensureFanDir } = require('./config.js');
+const { fanDir, loadInstalled, saveInstalled, loadRegistries, saveRegistries, ensureFanDir, removeInstalledSkill } = require('./config.js');
 const { fetchIndex, searchSkills, resolveDependencies, getSkillInfo } = require('./registry.js');
 const { installSkill, removeSkill, updateSkill } = require('./installer.js');
 
@@ -89,11 +90,20 @@ function run(argv) {
 
       const installed = loadInstalled(HOME);
       const instInfo = installed.skills[skillId];
-      if (instInfo) {
+      const skillDir = path.join(fanDir(HOME), 'skills', skillId);
+      const dirExists = fs.existsSync(skillDir);
+
+      if (instInfo && dirExists) {
         console.log(`  Status: INSTALLED (v${instInfo.version})`);
         if (skill.version !== instInfo.version) {
-          console.log(`  ${skill.version !== instInfo.version ? 'Update available: ' + instInfo.version + ' → ' + skill.version + ' (run `fan update ' + skillId + '`)' : ''}`);
+          console.log(`  Update available: ${instInfo.version} → ${skill.version} (run \`fan update ${skillId}\`)`);
         }
+      } else if (instInfo && !dirExists) {
+        console.log(`  Status: BROKEN — record exists (v${instInfo.version}) but directory is missing`);
+        console.log(`  Run \`fan install ${skillId}\` to repair.`);
+      } else if (!instInfo && dirExists) {
+        console.log(`  Status: not installed (but directory exists at ${skillDir})`);
+        console.log(`  Run \`fan install ${skillId}\` to register, or \`fan remove ${skillId}\` to clean up.`);
       } else {
         console.log('  Status: not installed');
       }
@@ -105,6 +115,7 @@ function run(argv) {
     .description('Install a skill from the registry')
     .argument('<skill-spec>', 'Skill identifier, optionally with @version (e.g. ncbi-downloader@1.2.0)')
     .option('--no-deps', 'Skip automatic dependency installation')
+    .option('--force', 'Force reinstall even if already installed')
     .action(async (skillSpec, opts) => {
       ensureFanDir(HOME);
 
@@ -132,8 +143,37 @@ function run(argv) {
         console.error(`Warning: requested version ${requestedVersion}, registry has ${skill.version}. Installing ${skill.version}.`);
       }
 
-      // Check dependencies
+      // Check if already installed
       const installed = loadInstalled(HOME);
+      const skillDir = path.join(fanDir(HOME), 'skills', skillId);
+      const dirExists = fs.existsSync(skillDir);
+
+      if (installed.skills[skillId] && dirExists) {
+        if (!opts.force) {
+          const instVer = installed.skills[skillId].version;
+          if (skill.version === instVer) {
+            console.log(`${skillId} v${instVer} is already installed and up to date.`);
+            console.log(`Location: ${skillDir}`);
+          } else {
+            console.log(`${skillId} v${instVer} is already installed. A newer version (v${skill.version}) is available.`);
+            console.log(`Run \`fan update ${skillId}\` to upgrade, or \`fan install ${skillId} --force\` to reinstall.`);
+          }
+          return;
+        }
+        console.log(`Force-reinstalling ${skillId}...`);
+      }
+
+      if (installed.skills[skillId] && !dirExists) {
+        console.log(`Cleaning up stale record for ${skillId} (directory missing)...`);
+        removeInstalledSkill(HOME, skillId);
+      }
+
+      if (!installed.skills[skillId] && dirExists) {
+        console.log(`Cleaning up orphaned directory for ${skillId} (not registered)...`);
+        fs.rmSync(skillDir, { recursive: true, force: true });
+      }
+
+      // Check dependencies
       if (!opts.noDeps && skill.requires && skill.requires.length > 0) {
         for (const reg of registries) {
           try {
