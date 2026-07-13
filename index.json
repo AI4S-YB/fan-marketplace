@@ -2,7 +2,7 @@
   "registry": {
     "name": "fan-marketplace",
     "version": "1.0.0",
-    "updated": "2026-07-12T03:39:19.426Z"
+    "updated": "2026-07-13T03:41:09.030Z"
   },
   "skills": [
     {
@@ -39,7 +39,7 @@
     {
       "id": "fan-files",
       "display_name": "Fan-Files 数据检索",
-      "description": "服务器文件元数据检索引擎——扫描、推断、检索生物信息学数据，让 AI 助手拥有全服务器数据视野",
+      "description": "服务器文件元数据检索引擎——扫描、推断、检索生物信息学数据，让 AI 助手��有全服务器数据视野",
       "author": "AI4S-YB",
       "version": "0.1.0",
       "license": "MIT",
